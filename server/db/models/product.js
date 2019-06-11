@@ -30,8 +30,9 @@ const Product = db.define('product', {
       notEmpty: true
     }
   },
+
   manufacturer: {
-    type: Sequelize.String
+    type: Sequelize.STRING
   }
 })
 
