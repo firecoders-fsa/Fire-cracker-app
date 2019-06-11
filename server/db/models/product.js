@@ -36,7 +36,7 @@ const Product = db.define('product', {
   },
 
   manufacturer: {
-    type: Sequelize.String
+    type: Sequelize.STRING
   }
 })
 
