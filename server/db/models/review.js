@@ -1,4 +1,5 @@
 const db = require('../db')
+const Sequelize = require('sequelize')
 
 const Review = db.define('review', {
   message: {
@@ -10,3 +11,5 @@ const Review = db.define('review', {
     allowNull: false
   }
 })
+
+module.exports = Review
