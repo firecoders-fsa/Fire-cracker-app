@@ -8,6 +8,7 @@ const Product = require('../server/db/models/product')
 const Category = require('../server/db/models/category')
 const Order = require('../server/db/models/order')
 const Review = require('../server/db/models/review')
+const Image = require('../server/db/models/image')
 
 async function seed() {
   await db.sync({force: true})
@@ -29,12 +30,26 @@ async function seed() {
       manufacturer
     })
 
+    let image = await Image.create({
+      imageUrl: '/images/defaultImg.jpg'
+    })
+
     let adjective = faker.hacker.adjective()
     let fakeCat = await Category.create({
       name: adjective
     })
 
+    let order = ['created', 'processing', 'cancelled', 'completed', 'shipped']
+
+    let num = Math.floor(Math.random() * 5)
+
+    let fakeOrder = await Order.create({
+      status: order[num]
+    })
+
     await fakeProd.addCategory(fakeCat)
+    // console.log(Object.keys(fakeOrder.__proto__))
+    await fakeOrder.addProduct(fakeProd)
   }
 
   for (let i = 0; i < 50; i++) {
@@ -57,13 +72,6 @@ async function seed() {
 
   for (let i = 0; i < 50; i++) {
     //order
-    let order = ['created', 'processing', 'cancelled', 'completed', 'shipped']
-
-    let num = Math.floor(Math.random() * 5)
-
-    Order.create({
-      status: order[num]
-    })
   }
 
   for (let i = 0; i < 50; i++) {
