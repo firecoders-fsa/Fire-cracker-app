@@ -22,6 +22,7 @@ async function seed() {
     let description = faker.commerce.product()
     let price = faker.random.number()
     let inventoryQuantity = faker.random.number()
+    let purchasedQuantity = faker.random.number()
     let manufacturer = faker.commerce.productAdjective()
 
     let fakeProd = await Product.create({
@@ -29,6 +30,7 @@ async function seed() {
       description,
       price,
       inventoryQuantity,
+      purchasedQuantity,
       manufacturer
     })
 
@@ -62,6 +64,8 @@ async function seed() {
   let description = faker.commerce.product()
   let price = faker.random.number()
   let inventoryQuantity = faker.random.number()
+  let purchasedQuantity = faker.random.number()
+
   let manufacturer = faker.commerce.productAdjective()
 
   let fakeProd2 = await Product.create({
@@ -69,6 +73,7 @@ async function seed() {
     description,
     price,
     inventoryQuantity,
+    purchasedQuantity,
     manufacturer
   })
 

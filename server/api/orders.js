@@ -44,13 +44,17 @@ router.post('/:id/:pid', async (req, res, next) => {
 
     const singleOrder = orderArr[0]
 
-    // const singleProduct = await Product.findByPk(req.params.pid)
+    const singleProduct = await Product.findByPk(req.params.pid)
 
-    // await singleOrder.addProduct(singleProduct)
-
-    const apple = await singleOrder.upsert({id: 1})
-
-    res.json(singleOrder)
+    if (await singleOrder.hasProduct(singleProduct)) {
+      singleProduct.update({
+        purchasedQuantity: singleProduct.purchasedQuantity + 1
+      })
+    }
+    console.log(singleProduct.purchasedQuantity)
+    await singleOrder.addProduct(singleProduct)
+    console.log(await singleOrder.getProducts())
+    res.json(await singleOrder.getProducts())
   } catch (err) {
     next(err)
   }
