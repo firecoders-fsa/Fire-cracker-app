@@ -17,7 +17,7 @@ const Product = db.define('product', {
     }
   },
   price: {
-    type: Sequelize.FLOAT,
+    type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
       notEmpty: true
@@ -29,11 +29,6 @@ const Product = db.define('product', {
     validate: {
       notEmpty: true
     }
-  },
-  imageURL: {
-    // type: Sequelize.ARRAY({type: Sequelize.STRING}),
-    type: Sequelize.STRING,
-    defaultValue: '/images/defaultImg.jpg'
   },
 
   manufacturer: {
