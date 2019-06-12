@@ -4,7 +4,7 @@ const Category = require('./category')
 const Review = require('./review')
 const Order = require('./order')
 const Image = require('./image')
-const Cart = require('./cart')
+
 const ProductOrderStash = require('./productOrderStash')
 
 /**
@@ -38,8 +38,6 @@ Image.belongsTo(Product)
 Order.belongsToMany(Product, {through: ProductOrderStash})
 Product.belongsToMany(Order, {through: ProductOrderStash})
 
-Cart.belongsTo(User)
-
 //hook that decides the price to store
 
 module.exports = {
@@ -48,6 +46,6 @@ module.exports = {
   Category,
   Review,
   Order,
-  Cart,
+  ProductOrderStash,
   Image
 }

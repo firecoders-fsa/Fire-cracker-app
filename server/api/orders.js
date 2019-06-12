@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Order, Product, Cart} = require('../db/models')
+const {Order, Product, ProductOrderStash} = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -45,15 +45,21 @@ router.post('/:id/:pid', async (req, res, next) => {
     const singleOrder = orderArr[0]
 
     const singleProduct = await Product.findByPk(req.params.pid)
-
     if (await singleOrder.hasProduct(singleProduct)) {
-      singleProduct.update({
-        purchasedQuantity: singleProduct.purchasedQuantity + 1
+      let snark = await ProductOrderStash.findAll({
+        where: {
+          productId: req.params.pid,
+          orderId: req.params.id
+        }
       })
+      snark[0].update({
+        quantity: snark[0].quantity + 1
+      })
+      console.log('this should be something ')
     }
-    console.log(singleProduct.purchasedQuantity)
-    await singleOrder.addProduct(singleProduct)
-    console.log(await singleOrder.getProducts())
+    // console.log(singleProduct.purchasedQuantity)
+    // await singleOrder.addProduct(singleProduct)
+    // console.log(await singleOrder.getProducts())
     res.json(await singleOrder.getProducts())
   } catch (err) {
     next(err)

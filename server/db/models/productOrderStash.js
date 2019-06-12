@@ -6,7 +6,8 @@ const ProductOrderStash = db.define('productOrderStash', {
     type: Sequelize.INTEGER
   },
   quantity: {
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
+    defaultValue: 1
   }
 })
 
