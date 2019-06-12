@@ -44,9 +44,11 @@ router.post('/:id/:pid', async (req, res, next) => {
 
     const singleOrder = orderArr[0]
 
-    const singleProduct = await Product.findByPk(req.params.pid)
+    // const singleProduct = await Product.findByPk(req.params.pid)
 
-    await singleOrder.addProduct(singleProduct)
+    // await singleOrder.addProduct(singleProduct)
+
+    const apple = await singleOrder.upsert({id: 1})
 
     res.json(singleOrder)
   } catch (err) {

@@ -9,6 +9,7 @@ const Category = require('../server/db/models/category')
 const Order = require('../server/db/models/order')
 const Review = require('../server/db/models/review')
 const Image = require('../server/db/models/image')
+const Cart = require('../server/db/models/cart')
 
 async function seed() {
   await db.sync({force: true})
@@ -65,6 +66,8 @@ async function seed() {
     inventoryQuantity,
     manufacturer
   })
+
+  // let cartProd = await Cart.addProduct(fakeProd2)
 
   let testOrder = await Order.findByPk(2)
   testOrder.addProduct(fakeProd2)
