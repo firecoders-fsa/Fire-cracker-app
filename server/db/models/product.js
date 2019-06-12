@@ -32,10 +32,7 @@ const Product = db.define('product', {
   },
   purchasedQuantity: {
     type: Sequelize.INTEGER,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    defaultValue: 1
   },
   manufacturer: {
     type: Sequelize.STRING

@@ -38,8 +38,7 @@ Image.belongsTo(Product)
 Order.belongsToMany(Product, {through: ProductOrderStash})
 Product.belongsToMany(Order, {through: ProductOrderStash})
 
-Order.belongsToMany(Product, {through: Cart})
-Product.belongsToMany(Order, {through: Cart})
+Cart.belongsTo(User)
 
 //hook that decides the price to store
 
