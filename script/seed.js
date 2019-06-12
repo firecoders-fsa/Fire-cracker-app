@@ -9,6 +9,7 @@ const Category = require('../server/db/models/category')
 const Order = require('../server/db/models/order')
 const Review = require('../server/db/models/review')
 const Image = require('../server/db/models/image')
+const Cart = require('../server/db/models/cart')
 
 // eslint-disable-next-line max-statements
 async function seed() {
@@ -21,6 +22,7 @@ async function seed() {
     let description = faker.commerce.product()
     let price = faker.random.number()
     let inventoryQuantity = faker.random.number()
+    let purchasedQuantity = faker.random.number()
     let manufacturer = faker.commerce.productAdjective()
 
     let fakeProd = await Product.create({
@@ -28,6 +30,7 @@ async function seed() {
       description,
       price,
       inventoryQuantity,
+      purchasedQuantity,
       manufacturer
     })
 
@@ -56,6 +59,28 @@ async function seed() {
     // console.log(Object.keys(fakeOrder.__proto__))
     await fakeOrder.addProduct(fakeProd)
   }
+
+  let randomName = faker.name.findName()
+  let description = faker.commerce.product()
+  let price = faker.random.number()
+  let inventoryQuantity = faker.random.number()
+  let purchasedQuantity = faker.random.number()
+
+  let manufacturer = faker.commerce.productAdjective()
+
+  let fakeProd2 = await Product.create({
+    name: randomName,
+    description,
+    price,
+    inventoryQuantity,
+    purchasedQuantity,
+    manufacturer
+  })
+
+  // let cartProd = await Cart.addProduct(fakeProd2)
+
+  let testOrder = await Order.findByPk(2)
+  testOrder.addProduct(fakeProd2)
 
   for (let i = 0; i < 50; i++) {
     //users
