@@ -8,7 +8,9 @@ const Product = require('../server/db/models/product')
 const Category = require('../server/db/models/category')
 const Order = require('../server/db/models/order')
 const Review = require('../server/db/models/review')
+const Image = require('../server/db/models/image')
 
+// eslint-disable-next-line max-statements
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
@@ -34,7 +36,10 @@ async function seed() {
       name: adjective
     })
 
+    let fakeImage = await Image.create()
+
     await fakeProd.addCategory(fakeCat)
+    await fakeProd.addImage(fakeImage)
   }
 
   for (let i = 0; i < 50; i++) {
