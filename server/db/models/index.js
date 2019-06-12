@@ -34,8 +34,10 @@ Order.belongsTo(User)
 Product.hasMany(Image)
 Image.belongsTo(Product)
 
-ProductOrderStash.belongsTo(Product)
-ProductOrderStash.belongsTo(Order)
+Order.belongsToMany(Product, {through: ProductOrderStash})
+Product.belongsToMany(Order, {through: ProductOrderStash})
+
+//hook that decides the price to store
 
 module.exports = {
   User,
