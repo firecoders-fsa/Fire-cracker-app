@@ -44,5 +44,6 @@ module.exports = {
   Product,
   Category,
   Review,
-  Order
+  Order,
+  Image
 }
