@@ -8,4 +8,4 @@ const Image = db.define('image', {
   }
 })
 
-module.exports = ModelName
+module.exports = Image

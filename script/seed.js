@@ -17,7 +17,7 @@ async function seed() {
     //product
     let randomName = faker.name.findName()
     let description = faker.commerce.product()
-    let price = faker.commerce.price()
+    let price = faker.random.number()
     let inventoryQuantity = faker.random.number()
     let manufacturer = faker.commerce.productAdjective()
 
@@ -33,8 +33,6 @@ async function seed() {
     let fakeCat = await Category.create({
       name: adjective
     })
-    console.log(fakeProd)
-    // console.log(Object.keys(fakeProd.__proto__))
 
     await fakeProd.addCategory(fakeCat)
   }

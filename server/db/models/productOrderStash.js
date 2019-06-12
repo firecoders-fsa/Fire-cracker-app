@@ -1,14 +1,10 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
 
-const Category = db.define('category', {
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+const ProductOrderStash = db.define('productOrderStash', {
+  priceAtPurchase: {
+    type: Sequelize.INTEGER
   }
 })
 
-module.exports = Category
+module.exports = ProductOrderStash
