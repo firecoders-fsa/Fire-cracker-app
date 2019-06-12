@@ -11,6 +11,7 @@ const Review = require('../server/db/models/review')
 const Image = require('../server/db/models/image')
 const Cart = require('../server/db/models/cart')
 
+// eslint-disable-next-line max-statements
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
@@ -40,6 +41,10 @@ async function seed() {
       name: adjective
     })
 
+    let fakeImage = await Image.create()
+
+    await fakeProd.addCategory(fakeCat)
+    await fakeProd.addImage(fakeImage)
     let order = ['created', 'processing', 'cancelled', 'completed', 'shipped']
 
     let num = Math.floor(Math.random() * 5)
