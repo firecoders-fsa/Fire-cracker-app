@@ -52,6 +52,23 @@ async function seed() {
     await fakeOrder.addProduct(fakeProd)
   }
 
+  let randomName = faker.name.findName()
+  let description = faker.commerce.product()
+  let price = faker.random.number()
+  let inventoryQuantity = faker.random.number()
+  let manufacturer = faker.commerce.productAdjective()
+
+  let fakeProd2 = await Product.create({
+    name: randomName,
+    description,
+    price,
+    inventoryQuantity,
+    manufacturer
+  })
+
+  let testOrder = await Order.findByPk(2)
+  testOrder.addProduct(fakeProd2)
+
   for (let i = 0; i < 50; i++) {
     //users
     let email = faker.internet.email()
