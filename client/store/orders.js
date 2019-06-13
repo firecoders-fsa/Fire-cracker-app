@@ -1,16 +1,33 @@
 import axios from 'axios'
 
 export const SET_ORDER = 'SET_ORDER'
+export const ADD_PROD_TO_ORDER = 'ADD_PROD_TO_ORDER'
 
 export const setOrder = singleOrder => ({
   type: SET_ORDER,
   singleOrder
 })
 
-export const fetchOrder = () => async dispatch => {
+export const addProdToOrder = product => ({
+  type: ADD_PROD_TO_ORDER,
+  product
+})
+
+export const fetchOrder = id => async dispatch => {
   try {
-    const {data: singleOrder} = await axios.get(`/api/orders/`)
+    const {data: singleOrder} = await axios.get(`/api/orders/${id}`)
     dispatch(setOrder(singleOrder))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const addProduct = (product, user) => async dispatch => {
+  try {
+    const {data: updatedOrder} = await axios.post(
+      `/api/orders/${user.id}/${product.id}`
+    )
+    dispatch(addProdToOrder(updatedOrder))
   } catch (err) {
     console.error(err)
   }

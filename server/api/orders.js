@@ -7,7 +7,8 @@ router.get('/:userId', async (req, res, next) => {
   try {
     const orders = await Order.findAll({
       where: {
-        userId: req.params.userId
+        userId: req.params.userId,
+        status: 'created'
       }
     })
     res.json(orders)
@@ -20,9 +21,9 @@ router.get('/:userId/:id', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
 
-    let orderPrdoucts = await singleOrder.getProducts()
+    let orderProducts = await singleOrder.getProducts()
 
-    res.json(orderPrdoucts)
+    res.json(orderProducts)
   } catch (err) {
     next(err)
   }
