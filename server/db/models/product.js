@@ -16,6 +16,7 @@ const Product = db.define('product', {
       notEmpty: true
     }
   },
+  // REVIEW: might be good to actually call this priceInCents
   price: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -23,14 +24,18 @@ const Product = db.define('product', {
       notEmpty: true
     }
   },
+  // REVIEW: deleted at
+  deletedAt: Sequelize.TIMESTAMP,
   inventoryQuantity: {
     type: Sequelize.INTEGER,
+    // REVIEW: can this be negative?
     allowNull: false,
     validate: {
       notEmpty: true
     }
   },
   purchasedQuantity: {
+    // REVIEW: nice double entry
     type: Sequelize.INTEGER,
     defaultValue: 1
   },

@@ -3,6 +3,33 @@ const router = require('express').Router()
 const {Order, Product, ProductOrderStash, User} = require('../db/models')
 module.exports = router
 
+GET /things
+GET /things/:thingId
+GET /things/:thingId/subCollection
+
+GET /subCollection/:subCollectionId
+
+POST /things
+POST /things/:thingId/subCollection
+
+PUT /things/:thingId
+
+DELETE /things/:thingId
+DELETE /things/:thingId/subCollection/:subCollectionId
+
+
+
+GET /orders/1/1
+
+DELETE /orders/1/1
+POST /orders/1/1
+
+
+
+// REVIEW:
+// URL design:
+// GET /orders/:userId
+// GET /users/:userId/orders
 router.get('/:userId', async (req, res, next) => {
   try {
     const orders = await Order.findAll({
@@ -16,6 +43,10 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
+// REVIEW url design: :userId isn't even used here
+// GET /orders/:id
+// GET /orders/:userId/:orderId
+//
 router.get('/:userId/:id', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
@@ -28,8 +59,14 @@ router.get('/:userId/:id', async (req, res, next) => {
   }
 })
 //add items by associating a product w/ an order
+// REVIEW:
+// POST /user/10/orders
+// orrr...
+// POST /orders  with { userId: 3 } in body
 router.post('/:userId', async (req, res, next) => {
+  req.query
   try {
+    // REVIEW: security/injection DANGER ZONE
     const newOrder = await Order.create(req.body)
     const currentUser = await User.findByPk(req.params.userId)
     await currentUser.addOrder(newOrder)
@@ -38,6 +75,16 @@ router.post('/:userId', async (req, res, next) => {
     next(error)
   }
 })
+
+GET /products?designerId=10
+
+get /designers/10/products
+
+// REVIEW: resources
+// POST /productOrderStashes
+// POST /orders/:userId/:productId
+//
+// POST /orders/:orderId/orderStashes
 
 router.post('/:userId/:pid', async (req, res, next) => {
   try {
@@ -88,6 +135,22 @@ router.delete('/:userId/:pid', async (req, res, next) => {
   }
 })
 
+GET => read
+DELETE => delete
+
+PUT  => replace
+PUT /orders/10 {buyer: 'collin'}
+
+PATCH
+
+GET /orders/10 => {buyer: 'collin'}
+
+POST /orders
+Location: /orders/10
+
+GET /orders/10
+
+// REVIEW: PUT /orders/10/45
 router.put('/:userId/:pid/:num', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
@@ -115,9 +178,15 @@ router.put('/:userId/:pid/:num', async (req, res, next) => {
     next(err)
   }
 })
+// REVIEW: REST principles vs RPC
+// HTTP PUT /orders/10/checkout
+/
+// PATCH /orders/10 { status: 'processing' }
 router.put('/:userId/:id/checkout', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
+    if (singleOrder.status === 'completed' && req.body.status === 'processing') {
+    }
     singleOrder.update({
       status: 'processing'
     })
