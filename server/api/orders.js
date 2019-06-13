@@ -39,6 +39,7 @@ router.post('/:userId', async (req, res, next) => {
     next(error)
   }
 })
+
 router.post('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
