@@ -3,16 +3,20 @@ const router = require('express').Router()
 const {Order, Product, ProductOrderStash, User} = require('../db/models')
 module.exports = router
 
-router.get('/', async (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
   try {
-    const orders = await Order.findAll({})
+    const orders = await Order.findAll({
+      where: {
+        userId: req.params.userId
+      }
+    })
     res.json(orders)
   } catch (err) {
     next(err)
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:userId/:id', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
 
@@ -24,11 +28,21 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 //add items by associating a product w/ an order
-
-router.post('/:id/:pid', async (req, res, next) => {
+router.post('/:userId', async (req, res, next) => {
+  try {
+    const newOrder = await Order.create(req.body)
+    const currentUser = await User.findByPk(req.params.userId)
+    await currentUser.addOrder(newOrder)
+    res.json(newOrder)
+  } catch (error) {
+    next(error)
+  }
+})
+router.post('/:userId/:id/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
+        userId: req.params.userId,
         id: req.params.id
       }
     })
@@ -54,10 +68,11 @@ router.post('/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.delete('/:id/:pid', async (req, res, next) => {
+router.delete('/:userId/:id/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
+        userId: req.params.userId,
         id: req.params.id
       }
     })
@@ -72,10 +87,11 @@ router.delete('/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.put('/:id/:pid/:num', async (req, res, next) => {
+router.put('/:userId/:id/:pid/:num', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
+        userId: req.params.userId,
         id: req.params.id
       }
     })
@@ -99,7 +115,7 @@ router.put('/:id/:pid/:num', async (req, res, next) => {
     next(err)
   }
 })
-router.put('/:id/checkout', async (req, res, next) => {
+router.put('/:userId/:id/checkout', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
     singleOrder.update({
