@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const {Order, Product, ProductOrderStash} = require('../db/models')
+const {Order, Product, ProductOrderStash, User} = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -95,6 +95,17 @@ router.put('/:id/:pid/:num', async (req, res, next) => {
     }
     await singleOrder.addProduct(singleProduct)
     res.json(await singleOrder.getProducts())
+  } catch (err) {
+    next(err)
+  }
+})
+router.put('/:id/checkout', async (req, res, next) => {
+  try {
+    const singleOrder = await Order.findByPk(req.params.id)
+    singleOrder.update({
+      status: 'processing'
+    })
+    res.json('hey good job')
   } catch (err) {
     next(err)
   }
