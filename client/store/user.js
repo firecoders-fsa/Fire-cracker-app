@@ -34,9 +34,9 @@ export const me = () => async dispatch => {
 
 export const newPendingOrder = user => async dispatch => {
   try {
-    const {data: cart} = await axios.post(`/api/orders/1`, {
+    const {data: cart} = await axios.post(`/api/orders/${user}`, {
       status: 'created',
-      userId: 1
+      userId: user
     })
     dispatch(createPendingOrder(cart))
   } catch (error) {
