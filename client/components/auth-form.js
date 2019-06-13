@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import {auth, newPendingOrder} from '../store'
-import axios from 'axios'
+import {auth} from '../store'
 
 /**
  * COMPONENT

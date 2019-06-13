@@ -8,11 +8,8 @@ export class SingleProduct extends Component {
     this.props.loadProduct(Number(this.props.match.params.id))
   }
   render() {
-    console.log('this is props', this.props)
-    console.log('this is state', this.state)
     if (Object.keys(this.props.singleProduct).length) {
       const singleProduct = this.props.singleProduct
-      // console.log(singleProduct)
       return (
         <div>
           <div key={singleProduct.id}>
