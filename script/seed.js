@@ -14,10 +14,30 @@ const Image = require('../server/db/models/image')
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
-
-  for (let i = 0; i < 50; i++) {
+  const fireWorkNames = [
+    'Anaar (Flowerpots)',
+    'Chakhri (Ground spinner)',
+    'Rocket',
+    'Ladis (Garland)',
+    'Snakessss!',
+    'Phuljhadi (Sparklers) or Pencil crackers',
+    'Hunter',
+    'Laxmi bomb',
+    'aloo bomb',
+    'gola bomb',
+    'Phoonk bomb',
+    'spleen splitters',
+    'whisker biscuits',
+    'honkey lighters',
+    'hoosker doos',
+    "hoosker don'ts",
+    'cherry bombs',
+    'nipsy daisers',
+    "one single whistlin' kitty chaser"
+  ]
+  for (let i = 0; i < 27; i++) {
     //product
-    let randomName = faker.name.findName()
+    let randomName = fireWorkNames[i]
     let description = faker.commerce.product()
     let price = faker.random.number()
     let inventoryQuantity = faker.random.number()
@@ -40,6 +60,15 @@ async function seed() {
       name: adjective
     })
 
+    //review
+    let message = faker.lorem.sentences()
+    let rating = Math.floor(Math.random() * 5) + 1
+    let fakeRev = await Review.create({
+      message,
+      rating
+    })
+
+    await fakeProd.addReview(fakeRev)
     let fakeImage = await Image.create()
 
     await fakeProd.addCategory(fakeCat)
@@ -79,7 +108,7 @@ async function seed() {
   let testOrder = await Order.findByPk(2)
   testOrder.addProduct(fakeProd2)
 
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 27; i++) {
     //users
     let email = faker.internet.email()
     let password = faker.internet.password()
@@ -94,20 +123,6 @@ async function seed() {
       googleId,
       isAdmin: false,
       shippingAddress
-    })
-  }
-
-  for (let i = 0; i < 50; i++) {
-    //order
-  }
-
-  for (let i = 0; i < 50; i++) {
-    //review
-    let message = faker.lorem.paragraph()
-    let rating = Math.floor(Math.random() * 5) + 1
-    Review.create({
-      message,
-      rating
     })
   }
 
