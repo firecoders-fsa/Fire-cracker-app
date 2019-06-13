@@ -74,11 +74,8 @@ router.put('/:id/:pid?num=x', async (req, res, next) => {
         id: req.params.id
       }
     })
-
     const singleOrder = orderArr[0]
-
     const singleProduct = await Product.findByPk(req.params.pid)
-
     if (await singleOrder.hasProduct(singleProduct)) {
       singleProduct.update({
         // purchasedQuantity: req.query.num
