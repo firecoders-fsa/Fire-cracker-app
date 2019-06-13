@@ -4,11 +4,7 @@ module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
-    const orders = await Order.findAll({
-      // explicitly select only the id and email fields - even though
-      // users' passwords are encrypted, it won't help if we just
-      // send everything to anyone who asks!
-    })
+    const orders = await Order.findAll({})
     res.json(orders)
   } catch (err) {
     next(err)
@@ -26,13 +22,7 @@ router.get('/:id', async (req, res, next) => {
     next(err)
   }
 })
-
 //add items by associating a product w/ an order
-//so if someone puts a
-
-//dynamic pricing exists in the shopping cart
-
-//static pricing exists in the stash
 
 router.post('/:id/:pid', async (req, res, next) => {
   try {
@@ -48,12 +38,54 @@ router.post('/:id/:pid', async (req, res, next) => {
 
     if (await singleOrder.hasProduct(singleProduct)) {
       singleProduct.update({
-        purchasedQuantity: singleProduct.purchasedQuantity + 1
+        // purchasedQuantity: singleProduct.purchasedQuantity + 1
+        //needs to update on product order stash
       })
     }
-    console.log(singleProduct.purchasedQuantity)
     await singleOrder.addProduct(singleProduct)
-    console.log(await singleOrder.getProducts())
+    res.json(await singleOrder.getProducts())
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/:id/:pid', async (req, res, next) => {
+  try {
+    const orderArr = await Order.findOrCreate({
+      where: {
+        id: req.params.id
+      }
+    })
+    const singleOrder = orderArr[0]
+
+    const singleProduct = await Product.findByPk(req.params.pid)
+    await singleOrder.removeProduct(singleProduct)
+
+    res.json(await singleOrder.getProducts())
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:id/:pid?num=x', async (req, res, next) => {
+  try {
+    const orderArr = await Order.findOrCreate({
+      where: {
+        id: req.params.id
+      }
+    })
+
+    const singleOrder = orderArr[0]
+
+    const singleProduct = await Product.findByPk(req.params.pid)
+
+    if (await singleOrder.hasProduct(singleProduct)) {
+      singleProduct.update({
+        // purchasedQuantity: req.query.num
+        //needs to update on product order stash
+      })
+    }
+    await singleOrder.addProduct(singleProduct)
     res.json(await singleOrder.getProducts())
   } catch (err) {
     next(err)
