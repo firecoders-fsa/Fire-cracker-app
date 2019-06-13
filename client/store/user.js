@@ -32,11 +32,11 @@ export const me = () => async dispatch => {
   }
 }
 
-export const newPendingOrder = user => async dispatch => {
+export const newPendingOrder = userid => async dispatch => {
   try {
-    const {data: cart} = await axios.post(`/api/orders/${user}`, {
+    const {data: cart} = await axios.post(`/api/orders/${userid}`, {
       status: 'created',
-      userId: user
+      userId: userid
     })
     dispatch(createPendingOrder(cart))
   } catch (error) {

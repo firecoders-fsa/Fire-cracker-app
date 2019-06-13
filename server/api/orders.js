@@ -38,12 +38,12 @@ router.post('/:userId', async (req, res, next) => {
     next(error)
   }
 })
-router.post('/:userId/:id/:pid', async (req, res, next) => {
+router.post('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
         userId: req.params.userId,
-        id: req.params.id
+        status: 'created'
       }
     })
 
@@ -54,7 +54,7 @@ router.post('/:userId/:id/:pid', async (req, res, next) => {
       let test = await ProductOrderStash.findAll({
         where: {
           productId: req.params.pid,
-          orderId: req.params.id
+          orderId: singleOrder.id
         }
       })
       test[0].update({
@@ -68,12 +68,12 @@ router.post('/:userId/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.delete('/:userId/:id/:pid', async (req, res, next) => {
+router.delete('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
         userId: req.params.userId,
-        id: req.params.id
+        status: 'created'
       }
     })
     const singleOrder = orderArr[0]
@@ -87,12 +87,12 @@ router.delete('/:userId/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.put('/:userId/:id/:pid/:num', async (req, res, next) => {
+router.put('/:userId/:pid/:num', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
         userId: req.params.userId,
-        id: req.params.id
+        status: 'created'
       }
     })
     const singleOrder = orderArr[0]

@@ -61,15 +61,15 @@ const mapSignup = state => {
 
 const mapDispatch = dispatch => {
   return {
-    async handleSubmit(evt) {
+    handleSubmit(evt) {
       evt.preventDefault()
       const formName = evt.target.name
       const email = evt.target.email.value
       const password = evt.target.password.value
-      const user = await axios.get(`/api/users/${email}`)
-      console.log(user.data.id)
+      // const user = await axios.get(`/api/users/${email}`)
+      // let id = user.data.id
       dispatch(auth(email, password, formName))
-      dispatch(newPendingOrder(user.data.id))
+      // dispatch(newPendingOrder(id))
     }
   }
 }
