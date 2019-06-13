@@ -19,7 +19,6 @@ export const fetchProduct = id => async dispatch => {
 const initialState = {}
 
 const singleProduct = (state = initialState, action) => {
-  console.log('this is the action!!!!!', action)
   switch (action.type) {
     case SINGLE_PRODUCT:
       return action.singleProd

@@ -6,6 +6,7 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+const CREATE_PENDING_ORDER = 'CREATE_PENDING_ORDER'
 
 /**
  * INITIAL STATE
@@ -17,6 +18,7 @@ const defaultUser = {}
  */
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
+const createPendingOrder = cart => ({type: CREATE_PENDING_ORDER, cart})
 
 /**
  * THUNK CREATORS
@@ -27,6 +29,18 @@ export const me = () => async dispatch => {
     dispatch(getUser(res.data || defaultUser))
   } catch (err) {
     console.error(err)
+  }
+}
+
+export const newPendingOrder = userid => async dispatch => {
+  try {
+    const {data: cart} = await axios.post(`/api/orders/${userid}`, {
+      status: 'created',
+      userId: userid
+    })
+    dispatch(createPendingOrder(cart))
+  } catch (error) {
+    console.log(error)
   }
 }
 

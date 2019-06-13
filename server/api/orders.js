@@ -1,17 +1,22 @@
 const router = require('express').Router()
-const {Order, Product, Cart} = require('../db/models')
+
+const {Order, Product, ProductOrderStash, User} = require('../db/models')
 module.exports = router
 
-router.get('/', async (req, res, next) => {
+router.get('/:userId', async (req, res, next) => {
   try {
-    const orders = await Order.findAll({})
+    const orders = await Order.findAll({
+      where: {
+        userId: req.params.userId
+      }
+    })
     res.json(orders)
   } catch (err) {
     next(err)
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:userId/:id', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
 
@@ -23,23 +28,37 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 //add items by associating a product w/ an order
-
-router.post('/:id/:pid', async (req, res, next) => {
+router.post('/:userId', async (req, res, next) => {
+  try {
+    const newOrder = await Order.create(req.body)
+    const currentUser = await User.findByPk(req.params.userId)
+    await currentUser.addOrder(newOrder)
+    res.json(newOrder)
+  } catch (error) {
+    next(error)
+  }
+})
+router.post('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
-        id: req.params.id
+        userId: req.params.userId,
+        status: 'created'
       }
     })
 
     const singleOrder = orderArr[0]
 
     const singleProduct = await Product.findByPk(req.params.pid)
-
     if (await singleOrder.hasProduct(singleProduct)) {
-      singleProduct.update({
-        // purchasedQuantity: singleProduct.purchasedQuantity + 1
-        //needs to update on product order stash
+      let test = await ProductOrderStash.findAll({
+        where: {
+          productId: req.params.pid,
+          orderId: singleOrder.id
+        }
+      })
+      test[0].update({
+        quantity: test[0].quantity + 1
       })
     }
     await singleOrder.addProduct(singleProduct)
@@ -49,11 +68,12 @@ router.post('/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.delete('/:id/:pid', async (req, res, next) => {
+router.delete('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
-        id: req.params.id
+        userId: req.params.userId,
+        status: 'created'
       }
     })
     const singleOrder = orderArr[0]
@@ -67,23 +87,40 @@ router.delete('/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.put('/:id/:pid?num=x', async (req, res, next) => {
+router.put('/:userId/:pid/:num', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
-        id: req.params.id
+        userId: req.params.userId,
+        status: 'created'
       }
     })
     const singleOrder = orderArr[0]
     const singleProduct = await Product.findByPk(req.params.pid)
     if (await singleOrder.hasProduct(singleProduct)) {
-      singleProduct.update({
-        // purchasedQuantity: req.query.num
-        //needs to update on product order stash
+      let test = await ProductOrderStash.findAll({
+        where: {
+          productId: req.params.pid,
+          orderId: req.params.id
+        }
+      })
+      test[0].update({
+        quantity: Number(req.params.num)
       })
     }
     await singleOrder.addProduct(singleProduct)
     res.json(await singleOrder.getProducts())
+  } catch (err) {
+    next(err)
+  }
+})
+router.put('/:userId/:id/checkout', async (req, res, next) => {
+  try {
+    const singleOrder = await Order.findByPk(req.params.id)
+    singleOrder.update({
+      status: 'processing'
+    })
+    res.json('hey good job')
   } catch (err) {
     next(err)
   }
