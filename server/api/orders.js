@@ -96,7 +96,6 @@ router.put('/:userId/:pid/:num', async (req, res, next) => {
       }
     })
     const singleOrder = orderArr[0]
-
     const singleProduct = await Product.findByPk(req.params.pid)
     if (await singleOrder.hasProduct(singleProduct)) {
       let test = await ProductOrderStash.findAll({
