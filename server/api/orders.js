@@ -46,16 +46,15 @@ router.post('/:id/:pid', async (req, res, next) => {
 
     const singleProduct = await Product.findByPk(req.params.pid)
     if (await singleOrder.hasProduct(singleProduct)) {
-      let snark = await ProductOrderStash.findAll({
+      let test = await ProductOrderStash.findAll({
         where: {
           productId: req.params.pid,
           orderId: req.params.id
         }
       })
-      snark[0].update({
-        quantity: snark[0].quantity + 1
+      test[0].update({
+        quantity: test[0].quantity + 1
       })
-      console.log('this should be something ')
     }
     // console.log(singleProduct.purchasedQuantity)
     // await singleOrder.addProduct(singleProduct)
