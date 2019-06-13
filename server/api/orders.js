@@ -1,4 +1,5 @@
 const router = require('express').Router()
+
 const {Order, Product, ProductOrderStash} = require('../db/models')
 module.exports = router
 
@@ -35,11 +36,15 @@ router.post('/:id/:pid', async (req, res, next) => {
     const singleOrder = orderArr[0]
 
     const singleProduct = await Product.findByPk(req.params.pid)
-
     if (await singleOrder.hasProduct(singleProduct)) {
-      singleProduct.update({
-        // purchasedQuantity: singleProduct.purchasedQuantity + 1
-        //needs to update on product order stash
+      let test = await ProductOrderStash.findAll({
+        where: {
+          productId: req.params.pid,
+          orderId: req.params.id
+        }
+      })
+      test[0].update({
+        quantity: test[0].quantity + 1
       })
     }
     await singleOrder.addProduct(singleProduct)
@@ -67,14 +72,13 @@ router.delete('/:id/:pid', async (req, res, next) => {
   }
 })
 
-router.put('/:id/:pid?num=x', async (req, res, next) => {
+router.put('/:id/:pid/:num', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
       where: {
         id: req.params.id
       }
     })
-
     const singleOrder = orderArr[0]
 
     const singleProduct = await Product.findByPk(req.params.pid)
@@ -86,16 +90,9 @@ router.put('/:id/:pid?num=x', async (req, res, next) => {
         }
       })
       test[0].update({
-        quantity: test[0].quantity + 1
+        quantity: Number(req.params.num)
       })
     }
-    // console.log(singleProduct.purchasedQuantity)
-    // await singleOrder.addProduct(singleProduct)
-    // console.log(await singleOrder.getProducts())
-    singleProduct.update({
-      // purchasedQuantity: req.query.num
-      //needs to update on product order stash
-    })
     await singleOrder.addProduct(singleProduct)
     res.json(await singleOrder.getProducts())
   } catch (err) {
