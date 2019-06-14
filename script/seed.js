@@ -35,7 +35,7 @@ async function seed() {
     'nipsy daisers',
     "one single whistlin' kitty chaser"
   ]
-  for (let i = 0; i < 27; i++) {
+  for (let i = 0; i < fireWorkNames.length; i++) {
     //product
     let randomName = fireWorkNames[i]
     let description = faker.commerce.product()
