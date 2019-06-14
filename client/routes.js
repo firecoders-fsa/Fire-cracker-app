@@ -4,27 +4,33 @@ import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {Login, Signup, UserHome} from './components'
 import {me} from './store'
+
 import {fetchProducts} from './store/products'
+
 import AllProducts from './components/AllProducts'
 import SingleProduct from './components/SingleProduct'
+import Cart from './components/Cart'
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount() {
-    this.props.loadInitialData()
-    this.props.loadProducts()
+  async componentDidMount() {
+    await this.props.loadInitialData()
+    await this.props.loadProducts()
   }
 
   render() {
     const {isLoggedIn} = this.props
-
+    console.log('routes props ', this.props)
     return (
       <Switch>
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/products" component={AllProducts} />
         <Route path="/products/:id" component={SingleProduct} />
+
+        <Route path="/cart" component={Cart} />
+
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         {isLoggedIn && (
@@ -47,18 +53,15 @@ const mapState = state => {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
     // Otherwise, state.user will be an empty object, and state.user.id will be falsey
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    user: state.user
   }
 }
 
 const mapDispatch = dispatch => {
   return {
-    loadInitialData: () => {
-      dispatch(me())
-    },
-    loadProducts: () => {
-      dispatch(fetchProducts())
-    }
+    loadInitialData: () => dispatch(me()),
+    loadProducts: () => dispatch(fetchProducts())
   }
 }
 
