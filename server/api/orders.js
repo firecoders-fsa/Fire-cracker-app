@@ -3,6 +3,8 @@ const router = require('express').Router()
 const {Order, Product, ProductOrderStash, User} = require('../db/models')
 module.exports = router
 
+// getting all orders by a particular user
+// /users/:userId
 router.get('/:userId', async (req, res, next) => {
   try {
     const orders = await Order.findAll({
@@ -16,6 +18,8 @@ router.get('/:userId', async (req, res, next) => {
   }
 })
 
+//getting the products on a particular order
+// /orders/:orderId
 router.get('/:userId/:id', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
@@ -27,7 +31,9 @@ router.get('/:userId/:id', async (req, res, next) => {
     next(err)
   }
 })
+
 //add items by associating a product w/ an order
+// /users/:userId
 router.post('/:userId', async (req, res, next) => {
   try {
     const newOrder = await Order.create(req.body)
@@ -39,6 +45,9 @@ router.post('/:userId', async (req, res, next) => {
   }
 })
 
+//find an order according to the userId, add a specific product to the cart. if the product is already on the cart increment the quantity
+
+// user/userId/product/productId
 router.post('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
@@ -69,6 +78,8 @@ router.post('/:userId/:pid', async (req, res, next) => {
   }
 })
 
+// delete product on an order for authorized user
+// user/userId/product/productId
 router.delete('/:userId/:pid', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
@@ -88,6 +99,11 @@ router.delete('/:userId/:pid', async (req, res, next) => {
   }
 })
 
+// finding/creating an order by its userId, describing new order as 'created', finding a specific product, and updating the quantity to a specific number
+
+//can we split off this find/create functionality, does it need to be on the quantity adjustment route --|
+//                                            |
+// user/:userId/product/:productId/:quantity  |
 router.put('/:userId/:pid/:num', async (req, res, next) => {
   try {
     const orderArr = await Order.findOrCreate({
@@ -115,6 +131,10 @@ router.put('/:userId/:pid/:num', async (req, res, next) => {
     next(err)
   }
 })
+
+// checks out a cart by updating their order from 'created' to processing'
+//TODO: Add functionality to 'freeze' priceAtPurchase
+// order/:orderId
 router.put('/:userId/:id/checkout', async (req, res, next) => {
   try {
     const singleOrder = await Order.findByPk(req.params.id)
