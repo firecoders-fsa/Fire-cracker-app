@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const {Order, Product, ProductOrderStash, User} = require('../db/models')
+const {Order, Product, ProductOrderStash} = require('../db/models')
 module.exports = router
 
 // getting all orders by a particular user

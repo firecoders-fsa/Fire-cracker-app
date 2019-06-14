@@ -35,6 +35,9 @@ Order.belongsTo(User)
 Product.hasMany(Image)
 Image.belongsTo(Product)
 
+Order.hasMany(Image)
+Image.belongsTo(Order)
+
 Order.belongsToMany(Product, {through: ProductOrderStash})
 Product.belongsToMany(Order, {through: ProductOrderStash})
 

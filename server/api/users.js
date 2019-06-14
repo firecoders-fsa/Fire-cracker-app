@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {User, Order, Product} = require('../db/models')
+const {User, Order, Product, Image} = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -36,7 +36,10 @@ router.get('/:userId/cart', async (req, res, next) => {
         userId: req.params.userId,
         status: 'created'
       },
-      include: [Product]
+      include: [Product, {model: Product, include: Image}]
+    }).map(order => {
+      order.products = order.getProducts()
+      return order
     })
     res.json(orders)
   } catch (err) {
@@ -56,7 +59,7 @@ router.post('/:userId/cart', async (req, res, next) => {
 })
 
 // checks out a cart by updating their order from 'created' to processing'
-//TODO: Add functionality to 'freeze' priceAtPurchase
+//Add functionality to 'freeze' priceAtPurchase
 // order/:orderId
 router.put('/:userId/checkout', async (req, res, next) => {
   try {
