@@ -13,9 +13,9 @@ export const addProdToOrder = product => ({
   product
 })
 
-export const fetchOrder = id => async dispatch => {
+export const fetchCart = id => async dispatch => {
   try {
-    const {data: singleOrder} = await axios.get(`/api/orders/${id}`)
+    const {data: singleOrder} = await axios.get(`/api/users/${id}/cart`)
     dispatch(setOrder(singleOrder))
   } catch (err) {
     console.error(err)
@@ -34,7 +34,7 @@ export const addProduct = (product, user) => async dispatch => {
 }
 
 const initialState = {
-  singleOrder: []
+  singleOrder: {}
 }
 
 const reducer = (state = initialState, action) => {

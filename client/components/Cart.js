@@ -1,15 +1,14 @@
 import React, {Component} from 'react'
 import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {fetchOrder} from '../store/orders'
+import {fetchCart} from '../store/orders'
 import axios from 'axios'
 
 export class Cart extends Component {
   constructor() {
     super()
     this.state = {
-      hasNotUpdated: true,
-      productsInCart: {}
+      hasNotUpdated: true
     }
   }
 
@@ -18,16 +17,9 @@ export class Cart extends Component {
       this.setState({
         hasNotUpdated: false
       })
-      await this.props.fetchOrder(this.props.user.id)
-      let productList = await axios.get(
-        `/api/orders/${this.props.user.id}/${this.props.singleOrder[0].id}`
-      )
-      this.setState({
-        productsInCart: productList
-      })
-      console.log('hello ', this.props.singleOrder[1])
-      console.log('goodbye ', this.state.productsInCart)
-      console.log('type of productsInCart ', typeof this.state.productsInCart)
+      await this.props.fetchCart(this.props.user.id)
+
+      console.log('hello ', this.props.singleOrder[0])
     }
   }
 
@@ -45,7 +37,7 @@ export class Cart extends Component {
 }
 
 const mapDispatch = dispatch => ({
-  fetchOrder: id => dispatch(fetchOrder(id))
+  fetchCart: id => dispatch(fetchCart(id))
 })
 
 const mapState = state => ({
