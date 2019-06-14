@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import {withRouter, Link} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {fetchCart} from '../store/orders'
-import axios from 'axios'
 
 export class Cart extends Component {
   constructor() {
@@ -24,14 +23,23 @@ export class Cart extends Component {
   }
 
   render() {
+    console.log('props: ', this.props)
     if (this.props.user.id) {
-      return (
-        <div>
-          <h1>This is the cart</h1>
-        </div>
-      )
+      if (this.props.singleOrder[0]) {
+        return this.props.singleOrder[0].products.map(product => (
+          <div key={product.id}>
+            <h4>{product.name}</h4>
+            <img src={product.images.map(img => img.imageURL)} />
+            <h5>${product.price / 100}</h5>
+            <p>{product.description}</p>
+            <p />
+          </div>
+        ))
+      } else {
+        return <div>cart is empty</div>
+      }
     } else {
-      return <h1>user is not defined</h1>
+      return <div>user is not defined</div>
     }
   }
 }
