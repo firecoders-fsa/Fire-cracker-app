@@ -41,10 +41,11 @@ export class Cart extends Component {
             >
               <h4>{product.name}</h4>
               <img src={product.images.map(img => img.imageURL)} />
-              <h5>${product.price / 100}</h5>
-              <p>{product.description}</p>
-              <p />
             </Link>
+            <h5>${product.price / 100}</h5>
+            <p>Quantity: {product.productOrderStash.quantity}</p>
+            <p>{product.description}</p>
+
             <button
               type="button"
               onClick={() => this.deleteProduct(this.props.cart.id, product.id)}
