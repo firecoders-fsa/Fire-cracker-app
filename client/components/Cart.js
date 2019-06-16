@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {sendCart, sendExistingCart} from '../store/orders'
+import {sendCart, sendExistingCart, removeProduct} from '../store/orders'
+import {fetchProduct} from '../store/singleProduct'
 
 export class Cart extends Component {
   constructor() {
@@ -23,17 +24,33 @@ export class Cart extends Component {
     }
   }
 
+  deleteProduct(orderId, productId) {
+    event.preventDefault()
+    this.props.removeProduct(orderId, productId)
+  }
+
   render() {
     // console.log('props: ', this.props)
     if (this.props.user.id) {
       if (this.props.cart.products) {
         return this.props.cart.products.map(product => (
           <div key={product.id}>
-            <h4>{product.name}</h4>
-            <img src={product.images.map(img => img.imageURL)} />
-            <h5>${product.price / 100}</h5>
-            <p>{product.description}</p>
-            <p />
+            <Link
+              to={`/products/${product.id}`}
+              onClick={() => this.props.fetchProduct(product.id)}
+            >
+              <h4>{product.name}</h4>
+              <img src={product.images.map(img => img.imageURL)} />
+              <h5>${product.price / 100}</h5>
+              <p>{product.description}</p>
+              <p />
+            </Link>
+            <button
+              type="button"
+              onClick={() => this.deleteProduct(this.props.cart.id, product.id)}
+            >
+              Remove from Cart
+            </button>
           </div>
         ))
       } else {
@@ -47,7 +64,10 @@ export class Cart extends Component {
 
 const mapDispatch = dispatch => ({
   sendCart: userId => dispatch(sendCart(userId)),
-  sendExistingCart: userId => dispatch(sendExistingCart(userId))
+  sendExistingCart: userId => dispatch(sendExistingCart(userId)),
+  fetchProduct: productId => dispatch(fetchProduct(productId)),
+  removeProduct: (orderId, productId) =>
+    dispatch(removeProduct(orderId, productId))
 })
 
 const mapState = state => ({

@@ -44,15 +44,12 @@ export class SingleProduct extends Component {
         <div>
           <div key={singleProduct.id}>
             <h4>{singleProduct.name}</h4>
-            {/* <img src={singleProduct.images.map(img => img.imageURL)} /> */}
+            <img src={singleProduct.images.map(img => img.imageURL)} />
             <h5>Price: ${singleProduct.price / 100}</h5>
             <button
               type="button"
               onClick={() =>
-                this.addToCart(
-                  this.props.cart.cart.id,
-                  this.props.singleProduct.id
-                )
+                this.addToCart(this.props.cart.id, this.props.singleProduct.id)
               }
             >
               Add to Cart
@@ -87,7 +84,7 @@ export class SingleProduct extends Component {
 const mapState = state => ({
   singleProduct: state.singleProduct,
   user: state.user,
-  cart: state.orders
+  cart: state.orders.cart
 })
 
 const mapDispatch = dispatch => ({

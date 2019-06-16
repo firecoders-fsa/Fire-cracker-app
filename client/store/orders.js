@@ -3,6 +3,22 @@ import axios from 'axios'
 export const CREATE_OR_FIND_CART = 'CREATE_OR_FIND_CART'
 export const ADD_PROD_TO_ORDER = 'ADD_PROD_TO_ORDER'
 export const GET_CART = 'GET_CART'
+export const DELETE_PROD_FROM_CART = 'DELETE_PROD_FROM_CART'
+
+export const deleteProduct = (orderId, productId) => ({
+  type: DELETE_PROD_FROM_CART,
+  orderId,
+  productId
+})
+
+export const removeProduct = (orderId, productId) => async dispatch => {
+  try {
+    await axios.delete(`/api/orders/${orderId}/${productId}`)
+    dispatch(deleteProduct(orderId, productId))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 export const findCart = cart => ({
   type: GET_CART,
@@ -68,6 +84,13 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         cart: action.updatedOrder
+      }
+    case DELETE_PROD_FROM_CART:
+      return {
+        ...state,
+        cart: state.cart.products.filter(
+          product => product.id !== action.productId
+        )
       }
     default:
       return state
