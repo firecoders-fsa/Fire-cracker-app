@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {fetchCart} from '../store/orders'
+import {sendCart, sendExistingCart} from '../store/orders'
 
 export class Cart extends Component {
   constructor() {
@@ -16,17 +16,18 @@ export class Cart extends Component {
       this.setState({
         hasNotUpdated: false
       })
-      await this.props.fetchCart(this.props.user.id)
+      await this.props.sendCart(this.props.user.id)
+      await this.props.sendExistingCart(this.props.user.id)
 
-      console.log('hello ', this.props.singleOrder[0])
+      // console.log('hello ', this.props.singleOrder)
     }
   }
 
   render() {
-    console.log('props: ', this.props)
+    // console.log('props: ', this.props)
     if (this.props.user.id) {
-      if (this.props.singleOrder[0]) {
-        return this.props.singleOrder[0].products.map(product => (
+      if (this.props.cart.products) {
+        return this.props.cart.products.map(product => (
           <div key={product.id}>
             <h4>{product.name}</h4>
             <img src={product.images.map(img => img.imageURL)} />
@@ -45,11 +46,12 @@ export class Cart extends Component {
 }
 
 const mapDispatch = dispatch => ({
-  fetchCart: id => dispatch(fetchCart(id))
+  sendCart: userId => dispatch(sendCart(userId)),
+  sendExistingCart: userId => dispatch(sendExistingCart(userId))
 })
 
 const mapState = state => ({
-  singleOrder: state.orders.singleOrder,
+  cart: state.orders.cart,
   user: state.user
 })
 

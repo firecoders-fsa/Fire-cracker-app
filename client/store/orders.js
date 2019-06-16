@@ -1,31 +1,46 @@
 import axios from 'axios'
 
-export const SET_ORDER = 'SET_ORDER'
+export const CREATE_OR_FIND_CART = 'CREATE_OR_FIND_CART'
 export const ADD_PROD_TO_ORDER = 'ADD_PROD_TO_ORDER'
+export const GET_CART = 'GET_CART'
 
-export const setOrder = singleOrder => ({
-  type: SET_ORDER,
-  singleOrder
+export const findCart = cart => ({
+  type: GET_CART,
+  cart
 })
 
-export const addProdToOrder = product => ({
+export const setCart = cart => ({
+  type: CREATE_OR_FIND_CART,
+  cart
+})
+
+export const addProdToOrder = updatedOrder => ({
   type: ADD_PROD_TO_ORDER,
-  product
+  updatedOrder
 })
 
-export const fetchCart = id => async dispatch => {
+export const sendExistingCart = userId => async dispatch => {
   try {
-    const {data: singleOrder} = await axios.get(`/api/users/${id}/cart`)
-    dispatch(setOrder(singleOrder))
+    const {data: cart} = await axios.get(`/api/users/${userId}/cart`)
+    dispatch(findCart(cart))
   } catch (err) {
     console.error(err)
   }
 }
 
-export const addProduct = (product, user) => async dispatch => {
+export const sendCart = userId => async dispatch => {
+  try {
+    const {data: cart} = await axios.post(`/api/users/${userId}/cart`)
+    dispatch(setCart(cart))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const addProduct = (orderId, productId) => async dispatch => {
   try {
     const {data: updatedOrder} = await axios.post(
-      `/api/orders/${user.id}/${product.id}`
+      `/api/orders/${orderId}/${productId}`
     )
     dispatch(addProdToOrder(updatedOrder))
   } catch (err) {
@@ -34,17 +49,26 @@ export const addProduct = (product, user) => async dispatch => {
 }
 
 const initialState = {
-  singleOrder: {}
+  cart: {}
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case SET_ORDER:
+    case CREATE_OR_FIND_CART:
       return {
         ...state,
-        singleOrder: action.singleOrder
+        cart: action.cart
       }
-
+    case GET_CART:
+      return {
+        ...state,
+        cart: action.cart
+      }
+    case ADD_PROD_TO_ORDER:
+      return {
+        ...state,
+        cart: action.updatedOrder
+      }
     default:
       return state
   }
