@@ -38,7 +38,7 @@ router.get('/:userId/cart', async (req, res, next) => {
       },
       include: [Product, {model: Product, include: Image}]
     })
-    console.log('orders:', orders)
+    // console.log('orders:', orders)
     res.json(orders)
   } catch (err) {
     next(err)

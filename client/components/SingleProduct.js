@@ -21,7 +21,7 @@ export class SingleProduct extends Component {
       await this.props.loadCart(this.props.user.id)
       await this.props.loadExsitingCart(this.props.user.id)
 
-      console.log('hello ', this.props)
+      // console.log('hello ', this.props)
     }
   }
 
