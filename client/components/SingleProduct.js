@@ -8,29 +8,11 @@ import {UpdateProduct} from './UpdateProduct'
 export class SingleProduct extends Component {
   constructor() {
     super()
-    this.state = {
-      hasNotUpdated: true
-    }
     this.addToCart = this.addToCart.bind(this)
   }
   async componentDidMount() {
     await this.props.loadCart(this.props.user.id)
     await this.props.loadExsitingCart(this.props.user.id)
-  }
-
-  async componentDidUpdate() {
-    if (this.state.hasNotUpdated) {
-      this.setState({
-        hasNotUpdated: false
-      })
-      await this.props.loadCart(this.props.user.id)
-      await this.props.loadExsitingCart(this.props.user.id)
-
-      // console.log('hello ', this.props)
-    }
-  }
-
-  componentDidMount() {
     this.props.loadProduct(Number(this.props.match.params.id))
   }
 

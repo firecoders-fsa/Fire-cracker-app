@@ -4,6 +4,12 @@ export const CREATE_OR_FIND_CART = 'CREATE_OR_FIND_CART'
 export const ADD_PROD_TO_ORDER = 'ADD_PROD_TO_ORDER'
 export const GET_CART = 'GET_CART'
 export const DELETE_PROD_FROM_CART = 'DELETE_PROD_FROM_CART'
+export const CHANGE_PURCHASE_QUANTITY = 'CHANGE_PURCHASE_QUANTITY'
+
+export const changePurchaseQuantity = quantity => ({
+  type: CHANGE_PURCHASE_QUANTITY,
+  quantity
+})
 
 export const deleteProduct = (orderId, productId) => ({
   type: DELETE_PROD_FROM_CART,
@@ -35,9 +41,9 @@ export const addProdToOrder = updatedOrder => ({
   updatedOrder
 })
 
-export const sendExistingCart = userId => async dispatch => {
+export const sendExistingCart = () => async dispatch => {
   try {
-    const {data: cart} = await axios.get(`/api/users/${userId}/cart`)
+    const {data: cart} = await axios.get(`/api/cart`)
     dispatch(findCart(cart))
   } catch (err) {
     console.error(err)
