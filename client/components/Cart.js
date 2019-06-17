@@ -11,18 +11,21 @@ export class Cart extends Component {
       hasNotUpdated: true
     }
   }
-
-  async componentDidUpdate() {
-    if (this.state.hasNotUpdated) {
-      this.setState({
-        hasNotUpdated: false
-      })
-      await this.props.sendCart(this.props.user.id)
-      await this.props.sendExistingCart(this.props.user.id)
-
-      // console.log('hello ', this.props.singleOrder)
-    }
+  async componentDidMount() {
+    await this.props.sendCart(this.props.user.id)
+    await this.props.sendExistingCart(this.props.user.id)
   }
+
+  // async componentDidUpdate() {
+  //   if (this.state.hasNotUpdated) {
+  //     this.setState({
+  //       hasNotUpdated: false
+  //     })
+  //     await this.props.sendCart(this.props.user.id)
+  //     await this.props.sendExistingCart(this.props.user.id)
+
+  //   }
+  // }
 
   deleteProduct(orderId, productId) {
     event.preventDefault()
