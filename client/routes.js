@@ -13,6 +13,7 @@ import Cart from './components/Cart'
 import NewProduct from './components/NewProduct'
 import UpdateProduct from './components/UpdateProduct'
 
+import Checkout from './components/Checkout'
 /**
  * COMPONENT
  */
@@ -33,6 +34,7 @@ class Routes extends Component {
         <Route path="/newProduct" component={NewProduct} />
         <Route path="/Update" component={UpdateProduct} />
         <Route path="/cart" component={Cart} />
+        <Route path="/checkout" component={Checkout} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         {isLoggedIn && (

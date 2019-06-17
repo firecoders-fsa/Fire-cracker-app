@@ -2,15 +2,16 @@ import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {fetchCart} from '../store/orders'
+import axios from 'axios'
 
-export class Cart extends Component {
+export class Checkout extends Component {
   constructor() {
     super()
     this.state = {
       hasNotUpdated: true
     }
+    this.sendEmail = this.sendEmail.bind(this)
   }
-
   async componentDidUpdate() {
     if (this.state.hasNotUpdated) {
       this.setState({
@@ -21,20 +22,31 @@ export class Cart extends Component {
       console.log('hello ', this.props.singleOrder[0])
     }
   }
-
+  async sendEmail() {
+    await axios.post('/api/users/30/checkout/done')
+  }
   render() {
-    console.log('props: ', this.props)
+    console.log('user props: ', this.props.user)
+
     if (this.props.user.id) {
       if (this.props.singleOrder[0]) {
-        return this.props.singleOrder[0].products.map(product => (
-          <div key={product.id}>
-            <h4>{product.name}</h4>
-            <img src={product.images.map(img => img.imageURL)} />
-            <h5>${product.price / 100}</h5>
-            <p>{product.description}</p>
-            <p />
+        return (
+          <div>
+            {this.props.user.shippingAddress
+              ? this.props.user.shippingAddress
+              : 'Example Shipping Address'}
+            <br />
+            <p>
+              Does this shipping address look correct? If so, click the button
+              below to finalize your order.
+            </p>
+
+            <br />
+            <button type="button" onClick={this.sendEmail}>
+              Click!
+            </button>
           </div>
-        ))
+        )
       } else {
         return <div>cart is empty</div>
       }
@@ -53,4 +65,4 @@ const mapState = state => ({
   user: state.user
 })
 
-export default withRouter(connect(mapState, mapDispatch)(Cart))
+export default withRouter(connect(mapState, mapDispatch)(Checkout))

@@ -19,14 +19,21 @@ export class SingleProduct extends Component {
           <div key={singleProduct.id}>
             <h4>{singleProduct.name}</h4>
             <img src={singleProduct.images.map(img => img.imageURL)} />
-            <h5>${singleProduct.price / 100}</h5>
-            <p>{singleProduct.description}</p>
-            <p>{singleProduct.manufacturer}</p>
+            <h5>Price: ${singleProduct.price / 100}</h5>
+            <h4>Description:</h4>
+            <code>{singleProduct.description}</code>
+            <h4>Manufacturer:</h4>
+            <code>
+              <p>{singleProduct.manufacturer}</p>
+            </code>
+            <h4>Reviews:</h4>
             <div>
               {singleProduct.reviews.map(review => (
                 <div key={review.id}>
-                  <p>{review.message}</p>
-                  <p>{review.rating}</p>
+                  <code>
+                    <p>{review.message}</p>
+                    <p>Rating: {review.rating}</p>
+                  </code>
                 </div>
               ))}
             </div>
