@@ -87,8 +87,6 @@ router.put('/:userId/checkout/done', async (req, res, next) => {
   }
 })
 
-// async..await is not allowed in global scope, must use a wrapper
-
 router.put('/:userId/checkout', async (req, res, next) => {
   try {
     const singleOrder = await Order.findOne({
@@ -97,11 +95,13 @@ router.put('/:userId/checkout', async (req, res, next) => {
         status: 'created'
       }
     })
+
     singleOrder.update({
       status: 'processing'
     })
     const currentUser = await User.findByPk(req.params.userId)
     send(currentUser.email)
+    console.log(req.session)
     res.json('hey good job')
   } catch (err) {
     next(err)

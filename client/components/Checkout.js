@@ -8,7 +8,8 @@ export class Checkout extends Component {
   constructor() {
     super()
     this.state = {
-      hasNotUpdated: true
+      hasNotUpdated: true,
+      hasNotCheckedOut: true
     }
     this.sendEmail = this.sendEmail.bind(this)
   }
@@ -18,40 +19,31 @@ export class Checkout extends Component {
         hasNotUpdated: false
       })
       await this.props.sendCart(this.props.user.id)
-
-      console.log('hello ', this.props.singleOrder[0])
     }
   }
   async sendEmail() {
-    await axios.post('/api/users/30/checkout/done')
+    await axios.put('/api/users/30/checkout')
+    await axios.put('/api/users/30/checkout/done')
+    this.setState({
+      hasNotCheckedOut: false
+    })
   }
   render() {
-    console.log('user props: ', this.props.user)
-
-    if (this.props.user.id) {
-      if (this.props.singleOrder[0]) {
+    try {
+      if (this.state.hasNotCheckedOut) {
         return (
           <div>
-            {this.props.user.shippingAddress
-              ? this.props.user.shippingAddress
-              : 'Example Shipping Address'}
-            <br />
-            <p>
-              Does this shipping address look correct? If so, click the button
-              below to finalize your order.
-            </p>
-
-            <br />
+            If your order looks right, click the button below!
             <button type="button" onClick={this.sendEmail}>
-              Click!
+              Checkout
             </button>
           </div>
         )
       } else {
-        return <div>cart is empty</div>
+        return <div>Thanks for checking out!</div>
       }
-    } else {
-      return <div>user is not defined</div>
+    } catch (err) {
+      return <div>{err}</div>
     }
   }
 }
