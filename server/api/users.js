@@ -95,14 +95,17 @@ router.put('/:userId/checkout', async (req, res, next) => {
         status: 'created'
       }
     })
-
-    singleOrder.update({
-      status: 'processing'
-    })
-    const currentUser = await User.findByPk(req.params.userId)
-    send(currentUser.email)
-    console.log(req.session)
-    res.json('hey good job')
+    if (singleOrder) {
+      singleOrder.update({
+        status: 'processing'
+      })
+      const currentUser = await User.findByPk(req.params.userId)
+      send(currentUser.email)
+      console.log(req.session)
+      res.json('hey good job')
+    } else {
+      res.json('no')
+    }
   } catch (err) {
     next(err)
   }

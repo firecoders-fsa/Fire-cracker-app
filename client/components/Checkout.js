@@ -13,6 +13,14 @@ export class Checkout extends Component {
     }
     this.sendEmail = this.sendEmail.bind(this)
   }
+  async componentDidMount() {
+    let snake = await axios.put('/api/users/30/checkout')
+    if (snake.data == 'no') {
+      this.setState({
+        hasNotCheckedOut: false
+      })
+    }
+  }
   async componentDidUpdate() {
     if (this.state.hasNotUpdated) {
       this.setState({
