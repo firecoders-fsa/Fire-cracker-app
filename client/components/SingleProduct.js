@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 import {fetchProduct} from '../store/singleProduct'
 import {addProduct, sendCart, sendExistingCart} from '../store/orders'
+import {UpdateProduct} from './UpdateProduct'
 
 export class SingleProduct extends Component {
   constructor() {
@@ -71,6 +72,13 @@ export class SingleProduct extends Component {
                 </div>
               ))}
             </div>
+            {this.props.isAdmin ? (
+              <Link to="/Update" component={UpdateProduct}>
+                Update
+              </Link>
+            ) : (
+              <Fragment />
+            )}
             <p />
           </div>
         </div>
@@ -84,7 +92,8 @@ export class SingleProduct extends Component {
 const mapState = state => ({
   singleProduct: state.singleProduct,
   user: state.user,
-  cart: state.orders.cart
+  cart: state.orders.cart,
+  isAdmin: state.user.isAdmin
 })
 
 const mapDispatch = dispatch => ({
