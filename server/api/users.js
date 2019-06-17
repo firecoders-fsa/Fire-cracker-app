@@ -32,16 +32,14 @@ router.get('/:email', async (req, res, next) => {
 
 router.get('/:userId/cart', async (req, res, next) => {
   try {
-    const orders = await Order.findAll({
+    const orders = await Order.findOne({
       where: {
         userId: req.params.userId,
         status: 'created'
       },
       include: [Product, {model: Product, include: Image}]
-    }).map(order => {
-      order.products = order.getProducts()
-      return order
     })
+    // console.log('orders:', orders)
     res.json(orders)
   } catch (err) {
     next(err)
@@ -50,7 +48,12 @@ router.get('/:userId/cart', async (req, res, next) => {
 
 router.post('/:userId/cart', async (req, res, next) => {
   try {
-    const newOrder = await Order.create(req.body)
+    const [newOrder, i] = await Order.findOrCreate({
+      where: {
+        userId: req.params.userId,
+        status: 'created'
+      }
+    })
     const currentUser = await User.findByPk(req.params.userId)
     await currentUser.addOrder(newOrder)
     res.json(newOrder)

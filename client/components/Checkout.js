@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {fetchCart} from '../store/orders'
+import {sendCart} from '../store/orders'
 import axios from 'axios'
 
 export class Checkout extends Component {
@@ -17,7 +17,7 @@ export class Checkout extends Component {
       this.setState({
         hasNotUpdated: false
       })
-      await this.props.fetchCart(this.props.user.id)
+      await this.props.sendCart(this.props.user.id)
 
       console.log('hello ', this.props.singleOrder[0])
     }
@@ -57,7 +57,7 @@ export class Checkout extends Component {
 }
 
 const mapDispatch = dispatch => ({
-  fetchCart: id => dispatch(fetchCart(id))
+  sendCart: id => dispatch(sendCart(id))
 })
 
 const mapState = state => ({
