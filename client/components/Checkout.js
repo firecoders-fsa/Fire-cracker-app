@@ -3,6 +3,7 @@ import {withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {fetchCart} from '../store/orders'
 import axios from 'axios'
+
 export class Checkout extends Component {
   constructor() {
     super()
@@ -11,7 +12,6 @@ export class Checkout extends Component {
     }
     this.sendEmail = this.sendEmail.bind(this)
   }
-
   async componentDidUpdate() {
     if (this.state.hasNotUpdated) {
       this.setState({
@@ -27,6 +27,7 @@ export class Checkout extends Component {
   }
   render() {
     console.log('user props: ', this.props.user)
+
     if (this.props.user.id) {
       if (this.props.singleOrder[0]) {
         return (
@@ -36,13 +37,13 @@ export class Checkout extends Component {
               : 'Example Shipping Address'}
             <br />
             <p>
-              Does this shipping address look correct? If so, click that fat
-              button.
+              Does this shipping address look correct? If so, click the button
+              below to finalize your order.
             </p>
 
             <br />
             <button type="button" onClick={this.sendEmail}>
-              FAT BUTTON
+              Click!
             </button>
           </div>
         )

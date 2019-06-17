@@ -61,6 +61,16 @@ router.post('/:userId/cart', async (req, res, next) => {
 router.post('/:userId/checkout/done', async (req, res, next) => {
   try {
     main().catch(console.error)
+    const singleOrder = await Order.findOne({
+      where: {
+        userId: req.params.userId,
+        status: 'processing'
+      }
+    })
+    singleOrder.update({
+      status: 'completed'
+    })
+    res.json('this thing shipped')
   } catch (err) {
     next(err)
   }
