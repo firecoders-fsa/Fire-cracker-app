@@ -1,54 +1,39 @@
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {sendCart} from '../store/orders'
-import axios from 'axios'
+import {sendCart, checkoutCart} from '../store/orders'
+import Cart from './Cart'
+import {fetchProduct} from '../store/singleProduct'
 
 export class Checkout extends Component {
-  constructor() {
-    super()
-    this.state = {
-      hasNotUpdated: true,
-      hasNotCheckedOut: true
-    }
-    this.sendEmail = this.sendEmail.bind(this)
-  }
-  async componentDidMount() {
-    let snake = await axios.put('/api/users/30/checkout')
-    if (snake.data == 'no') {
-      this.setState({
-        hasNotCheckedOut: false
-      })
-    }
-  }
-  async componentDidUpdate() {
-    if (this.state.hasNotUpdated) {
-      this.setState({
-        hasNotUpdated: false
-      })
-      await this.props.sendCart(this.props.user.id)
-    }
-  }
-  async sendEmail() {
-    await axios.put('/api/users/30/checkout')
-    await axios.put('/api/users/30/checkout/done')
-    this.setState({
-      hasNotCheckedOut: false
-    })
-  }
   render() {
     try {
-      if (this.state.hasNotCheckedOut) {
+      if (this.props.cart.products) {
         return (
           <div>
+            {this.props.cart.products.map(product => (
+              <div key={product.id}>
+                <Link
+                  to={`/products/${product.id}`}
+                  onClick={() => this.props.fetchProduct(product.id)}
+                >
+                  <h4>{product.name}</h4>
+                  <img src={product.images.map(img => img.imageURL)} />
+                </Link>
+                <h5>${product.price / 100}</h5>
+                <p>Quantity: {product.productOrderStash.quantity}</p>
+                <p>{product.description}</p>
+              </div>
+            ))}
             If your order looks right, click the button below!
-            <button type="button" onClick={this.sendEmail}>
+            <br />
+            <button type="button" onClick={() => this.props.checkoutCart()}>
               Checkout
             </button>
           </div>
         )
       } else {
-        return <div>Thanks for checking out!</div>
+        return <div>cart is empty</div>
       }
     } catch (err) {
       return <div>{err}</div>
@@ -57,11 +42,13 @@ export class Checkout extends Component {
 }
 
 const mapDispatch = dispatch => ({
-  sendCart: id => dispatch(sendCart(id))
+  sendCart: orderId => dispatch(sendCart(orderId)),
+  fetchProduct: productId => dispatch(fetchProduct(productId)),
+  checkoutCart: () => dispatch(checkoutCart())
 })
 
 const mapState = state => ({
-  singleOrder: state.orders.singleOrder,
+  cart: state.orders.cart,
   user: state.user
 })
 

@@ -4,6 +4,7 @@ export const CREATE_OR_FIND_CART = 'CREATE_OR_FIND_CART'
 export const ADD_PROD_TO_ORDER = 'ADD_PROD_TO_ORDER'
 export const DELETE_PROD_FROM_CART = 'DELETE_PROD_FROM_CART'
 export const CHANGE_PURCHASE_QUANTITY = 'CHANGE_PURCHASE_QUANTITY'
+export const CHECKOUT_CART = 'CHECKOUT_CART'
 
 export const changePurchaseQuantity = quantity => ({
   type: CHANGE_PURCHASE_QUANTITY,
@@ -34,6 +35,10 @@ export const addProdToOrder = updatedOrder => ({
   type: ADD_PROD_TO_ORDER,
   updatedOrder
 })
+export const checkoutCart = checkedOutCart => ({
+  type: CHECKOUT_CART,
+  checkedOutCart
+})
 
 export const sendCart = () => async dispatch => {
   try {
@@ -44,6 +49,17 @@ export const sendCart = () => async dispatch => {
   }
 }
 
+export const completeCart = () => async dispatch => {
+  try {
+    const {data: checkedOutCart} = await axios.put('/api/cart/checkout', {
+      status: 'processing'
+    })
+    console.log(checkedOutCart)
+    dispatch(checkoutCart(checkedOutCart))
+  } catch (err) {
+    console.error(err)
+  }
+}
 export const addProduct = (orderId, productId) => async dispatch => {
   try {
     const {data: updatedOrder} = await axios.post(
@@ -80,6 +96,11 @@ const reducer = (state = initialState, action) => {
             product => product.id !== action.productId
           )
         }
+      }
+    case CHECKOUT_CART:
+      return {
+        ...state,
+        cart: action.checkedOutCart
       }
     default:
       return state
