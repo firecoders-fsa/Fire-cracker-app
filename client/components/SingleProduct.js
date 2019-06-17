@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {fetchProduct} from '../store/singleProduct'
-import {addProduct, sendCart, sendExistingCart} from '../store/orders'
+import {addProduct, sendCart} from '../store/orders'
 import {UpdateProduct} from './UpdateProduct'
 
 export class SingleProduct extends Component {
@@ -11,8 +11,7 @@ export class SingleProduct extends Component {
     this.addToCart = this.addToCart.bind(this)
   }
   async componentDidMount() {
-    await this.props.loadCart(this.props.user.id)
-    await this.props.loadExsitingCart(this.props.user.id)
+    await this.props.loadCart()
     this.props.loadProduct(Number(this.props.match.params.id))
   }
 
@@ -23,7 +22,6 @@ export class SingleProduct extends Component {
   }
 
   render() {
-    console.log('singleproduct props: ', this.props.user.id)
     if (Object.keys(this.props.singleProduct).length) {
       const singleProduct = this.props.singleProduct
       // console.log(singleProduct)
@@ -86,8 +84,7 @@ const mapDispatch = dispatch => ({
   loadProduct: productId => dispatch(fetchProduct(productId)),
   loadAddProduct: (orderId, productId) =>
     dispatch(addProduct(orderId, productId)),
-  loadCart: userId => dispatch(sendCart(userId)),
-  loadExsitingCart: userId => dispatch(sendExistingCart(userId))
+  loadCart: () => dispatch(sendCart())
 })
 
 export default withRouter(connect(mapState, mapDispatch)(SingleProduct))
