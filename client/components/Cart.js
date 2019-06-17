@@ -1,31 +1,18 @@
 import React, {Component} from 'react'
 import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {sendCart, sendExistingCart, removeProduct} from '../store/orders'
+import {sendCart, removeProduct} from '../store/orders'
 import {fetchProduct} from '../store/singleProduct'
 
 export class Cart extends Component {
   constructor() {
     super()
-    this.state = {
-      hasNotUpdated: true
-    }
+    this.deleteProduct = this.deleteProduct.bind(this)
   }
+
   async componentDidMount() {
-    await this.props.sendCart(this.props.user.id)
-    await this.props.sendExistingCart(this.props.user.id)
+    await this.props.sendCart()
   }
-
-  // async componentDidUpdate() {
-  //   if (this.state.hasNotUpdated) {
-  //     this.setState({
-  //       hasNotUpdated: false
-  //     })
-  //     await this.props.sendCart(this.props.user.id)
-  //     await this.props.sendExistingCart(this.props.user.id)
-
-  //   }
-  // }
 
   deleteProduct(orderId, productId) {
     event.preventDefault()
@@ -33,9 +20,9 @@ export class Cart extends Component {
   }
 
   render() {
-    // console.log('props: ', this.props)
-    if (this.props.user.id) {
-      if (this.props.cart.products) {
+    // console.log(this.props)
+    if (this.props.cart.products) {
+      if (this.props.cart.products.length > 0) {
         return this.props.cart.products.map(product => (
           <div key={product.id}>
             <Link
@@ -61,14 +48,13 @@ export class Cart extends Component {
         return <div>cart is empty</div>
       }
     } else {
-      return <div>user is not defined</div>
+      return <div>cart is empty</div>
     }
   }
 }
 
 const mapDispatch = dispatch => ({
-  sendCart: userId => dispatch(sendCart(userId)),
-  sendExistingCart: userId => dispatch(sendExistingCart(userId)),
+  sendCart: () => dispatch(sendCart()),
   fetchProduct: productId => dispatch(fetchProduct(productId)),
   removeProduct: (orderId, productId) =>
     dispatch(removeProduct(orderId, productId))

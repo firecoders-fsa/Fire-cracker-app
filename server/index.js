@@ -10,6 +10,8 @@ const sessionStore = new SequelizeStore({db})
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+const setSessionCart = require('./api/setSessionCart')
+
 module.exports = app
 
 // This is a global Mocha hook, used for resource cleanup.
@@ -62,6 +64,9 @@ const createApp = () => {
   )
   app.use(passport.initialize())
   app.use(passport.session())
+
+  // sets the cart on session
+  app.use(setSessionCart)
 
   // auth and api routes
   app.use('/auth', require('./auth'))
