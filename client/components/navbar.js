@@ -17,6 +17,7 @@ const Navbar = ({handleClick, isLoggedIn}) => (
           </a>
           <Link to="/products">Product Directory</Link>
           <Link to="/cart">Cart</Link>
+          <Link to="/checkout">Checkout</Link>
         </div>
       ) : (
         <div>
