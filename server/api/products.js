@@ -22,3 +22,42 @@ router.get('/:id', async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/', async (req, res, next) => {
+  try {
+    console.log(req.body)
+    const newProduct = await Product.create(req.body)
+    res.json(newProduct)
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    await Product.destroy({where: {id}})
+    res.status(204).end()
+  } catch (err) {
+    next(err)
+  }
+})
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const updatedProduct = await Product.findByPk(req.params.id)
+    console.log(req.body)
+    updatedProduct.update({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      manufacturer: req.body.manufacturer,
+      inventoryQuantity: req.body.inventoryQuantity,
+      purchasedQuantity: req.body.purchasedQuantity
+    })
+    res.json(updatedProduct)
+  } catch (err) {
+    console.error(error)
+    next(err)
+  }
+})

@@ -10,6 +10,9 @@ import {fetchProducts} from './store/products'
 import AllProducts from './components/AllProducts'
 import SingleProduct from './components/SingleProduct'
 import Cart from './components/Cart'
+import NewProduct from './components/NewProduct'
+import UpdateProduct from './components/UpdateProduct'
+
 import Checkout from './components/Checkout'
 /**
  * COMPONENT
@@ -28,7 +31,8 @@ class Routes extends Component {
         {/* Routes placed here are available to all visitors */}
         <Route exact path="/products" component={AllProducts} />
         <Route path="/products/:id" component={SingleProduct} />
-
+        <Route path="/newProduct" component={NewProduct} />
+        <Route path="/Update" component={UpdateProduct} />
         <Route path="/cart" component={Cart} />
         <Route path="/checkout" component={Checkout} />
         <Route path="/login" component={Login} />

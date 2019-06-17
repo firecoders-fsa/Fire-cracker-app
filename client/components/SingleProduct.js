@@ -1,16 +1,18 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 import {fetchProduct} from '../store/singleProduct'
-// import {}
+import {UpdateProduct} from './UpdateProduct'
 
 export class SingleProduct extends Component {
   componentDidMount() {
     this.props.loadProduct(Number(this.props.match.params.id))
   }
+
   render() {
     if (Object.keys(this.props.singleProduct).length) {
       const singleProduct = this.props.singleProduct
+
       console.log(singleProduct)
       return (
         <div>
@@ -35,6 +37,13 @@ export class SingleProduct extends Component {
                 </div>
               ))}
             </div>
+            {this.props.isAdmin ? (
+              <Link to="/Update" component={UpdateProduct}>
+                Update
+              </Link>
+            ) : (
+              <Fragment />
+            )}
             <p />
           </div>
         </div>
@@ -46,7 +55,8 @@ export class SingleProduct extends Component {
 }
 
 const mapState = state => ({
-  singleProduct: state.singleProduct
+  singleProduct: state.singleProduct,
+  isAdmin: state.user.isAdmin
 })
 
 const mapDispatch = dispatch => ({
