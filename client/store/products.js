@@ -21,6 +21,21 @@ export const removeProduct = id => ({
   id
 })
 
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
+
+export const updateProduct = (id, payload) => ({
+  type: UPDATE_PRODUCT,
+  payload: {
+    id: id,
+    name: payload.name,
+    description: payload.description,
+    price: payload.price,
+    manufacturer: payload.manufacturer,
+    inventoryQuantity: payload.inventoryQuantity,
+    purchasedQuantity: payload.purchasedQuantity
+  }
+})
+
 export const fetchProducts = () => async dispatch => {
   try {
     const {data: allProducts} = await axios.get('/api/products')
@@ -49,6 +64,22 @@ export const deleteProduct = id => async dispatch => {
   }
 }
 
+export const markupProduct = (id, payload) => async dispatch => {
+  try {
+    await axios.put(`/api/products/${id}`, {
+      name: payload.name,
+      description: payload.description,
+      price: payload.price,
+      inventoryQuantity: payload.inventoryQuantity,
+      purchasedQuantity: payload.purchasedQuantity,
+      manufacturer: payload.manufacturer
+    })
+    dispatch(updateProduct(id, payload))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 const initialState = {
   allProducts: []
 }
@@ -68,9 +99,27 @@ const reducer = (state = initialState, action) => {
     case REMOVE_PRODUCT:
       return {
         ...state,
-        allProducts: state.allProducts.filter(
+        allProducts: [...state.allProducts].filter(
           product => product.id !== action.id
         )
+      }
+    case UPDATE_PRODUCT:
+      return {
+        ...state,
+        allProducts: [...state.allProducts].map(product => {
+          if (product.id === action.id) {
+            return {
+              ...state.product,
+              name: action.payload.name,
+              description: action.payload.description,
+              price: action.payload.price,
+              inventoryQuantity: action.payload.inventoryQuantity,
+              purchasedQuantity: action.payload.purchasedQuantity,
+              manufacturer: action.payload.manufacturer
+            }
+          }
+          return product
+        })
       }
     default:
       return state

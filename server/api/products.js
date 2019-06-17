@@ -42,3 +42,22 @@ router.delete('/:id', async (req, res, next) => {
     next(err)
   }
 })
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const updatedProduct = await Product.findByPk(req.params.id)
+    console.log(req.body)
+    updatedProduct.update({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      manufacturer: req.body.manufacturer,
+      inventoryQuantity: req.body.inventoryQuantity,
+      purchasedQuantity: req.body.purchasedQuantity
+    })
+    res.json(updatedProduct)
+  } catch (err) {
+    console.error(error)
+    next(err)
+  }
+})

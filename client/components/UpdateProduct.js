@@ -1,11 +1,9 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import {createProduct} from '../store/products'
+import {markupProduct} from '../store/products'
 import {makeStyles} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import clsx from 'clsx'
-import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 
 const useStyles = makeStyles(theme => ({
@@ -25,19 +23,20 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-function NewProduct(props) {
+export function UpdateProduct(props) {
   const classes = useStyles()
+  const singleProduct = props.singleProduct
+
   const [values, setValues] = useState({
-    name: '   ',
-    description: '  ',
-    price: '  ',
-    inventoryQuantity: '  ',
-    purchaseQuantity: '  ',
-    manufacturer: '    '
+    name: singleProduct.name,
+    description: singleProduct.description,
+    price: singleProduct.price,
+    inventoryQuantity: singleProduct.inventoryQuantity,
+    purchasedQuantity: singleProduct.purchasedQuantity,
+    manufacturer: singleProduct.manufacturer
   })
-  console.log(values)
+
   const handleChange = name => event => {
-    console.log('event on handlechange', event)
     setValues({...values, [name]: event.target.value})
   }
 
@@ -95,12 +94,12 @@ function NewProduct(props) {
           variant="outlined"
         />
         <TextField
-          id="outlined-purchaseQuantity"
+          id="outlined-purchasedQuantity"
           type="number"
-          label="Purchase Quantity"
+          label="Purchased Quantity"
           className={classes.textField}
-          value={values.purchaseQuantity}
-          onChange={handleChange('purchaseQuantity')}
+          value={values.purchasedQuantity}
+          onChange={handleChange('purchasedQuantity')}
           margin="normal"
           variant="outlined"
         />
@@ -119,7 +118,7 @@ function NewProduct(props) {
           color="primary"
           className={classes.button}
           onClick={() => {
-            props.submitProduct(values)
+            props.updateProduct(singleProduct.id, values)
           }}
         >
           Submit
@@ -129,8 +128,12 @@ function NewProduct(props) {
   )
 }
 
-const mapDispatch = dispatch => ({
-  submitProduct: product => dispatch(createProduct(product))
+const mapState = state => ({
+  singleProduct: state.singleProduct
 })
 
-export default withRouter(connect(null, mapDispatch)(NewProduct))
+const mapDispatch = dispatch => ({
+  updateProduct: (id, values) => dispatch(markupProduct(id, values))
+})
+
+export default withRouter(connect(mapState, mapDispatch)(UpdateProduct))
