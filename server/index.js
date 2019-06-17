@@ -63,6 +63,28 @@ const createApp = () => {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  // TODO: make sure all includes/attributes match the implementation
+  // in server/api/users.js
+  const setSessionCart = async (req, res, next) => {
+    try {
+      if (req.user) {
+        req.cart = await req.user.getCart()
+      }
+      else if (req.session.cartId) {
+        req.cart = await Order.getByPk(req.session.cartId)
+      }
+      else {
+        const order = await Order.create()
+        req.session.cartId = order.id
+        req.cart = order
+      }
+      next()
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+  app.use(setSessionCart);
   // auth and api routes
   app.use('/auth', require('./auth'))
   app.use('/api', require('./api'))

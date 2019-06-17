@@ -30,19 +30,41 @@ router.get('/:email', async (req, res, next) => {
   }
 })
 
-router.get('/:userId/cart', async (req, res, next) => {
-  try {
-    const orders = await Order.findOne({
-      where: {
-        userId: req.params.userId,
-        status: 'created'
-      },
-      include: [Product, {model: Product, include: Image}]
-    })
-    // console.log('orders:', orders)
-    res.json(orders)
-  } catch (err) {
-    next(err)
+// I want to see my own cart
+// GET /cart
+
+// ../util.js
+function adminOnly (req, res, next) {
+  if (req.user && req.user.isAdmin) {
+    next()
+  else {
+    res.send(401)
+  }
+}
+
+function requireLogin (req, res, next) {
+  if (req.user) {
+    next()
+  else {
+    res.send(401)
+  }
+}
+
+// admin wants to see the cart for a user
+router.get('/:userId/cart', requireAdmin, async (req, res, next) => {
+    try {
+      const orders = await Order.findOne({
+        where: {
+          userId: req.params.userId,
+          status: 'created'
+        },
+        include: [Product, {model: Product, include: Image}]
+      })
+      // console.log('orders:', orders)
+      res.json(orders)
+    } catch (err) {
+      next(err)
+    }
   }
 })
 
