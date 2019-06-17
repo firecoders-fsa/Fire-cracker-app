@@ -13,6 +13,10 @@ export class SingleProduct extends Component {
     }
     this.addToCart = this.addToCart.bind(this)
   }
+  async componentDidMount() {
+    await this.props.loadCart(this.props.user.id)
+    await this.props.loadExsitingCart(this.props.user.id)
+  }
 
   async componentDidUpdate() {
     if (this.state.hasNotUpdated) {

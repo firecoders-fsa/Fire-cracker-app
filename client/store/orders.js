@@ -88,9 +88,12 @@ const reducer = (state = initialState, action) => {
     case DELETE_PROD_FROM_CART:
       return {
         ...state,
-        cart: state.cart.products.filter(
-          product => product.id !== action.productId
-        )
+        cart: {
+          ...state.cart,
+          products: state.cart.products.filter(
+            product => product.id !== action.productId
+          )
+        }
       }
     default:
       return state
