@@ -22,7 +22,7 @@ var send = require('gmail-send')({
 
 router.put('/checkout', async (req, res, next) => {
   try {
-    req.cart.update(req.body)
+    req.cart.update({status: 'processing'})
     console.log('this is the request', req)
     send(
       {
