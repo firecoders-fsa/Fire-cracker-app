@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {sendCart, checkoutCart} from '../store/orders'
+import {sendCart, completeCart} from '../store/orders'
 import Cart from './Cart'
 import {fetchProduct} from '../store/singleProduct'
 
@@ -27,7 +27,7 @@ export class Checkout extends Component {
             ))}
             If your order looks right, click the button below!
             <br />
-            <button type="button" onClick={() => this.props.checkoutCart()}>
+            <button type="button" onClick={() => this.props.completeCart()}>
               Checkout
             </button>
           </div>
@@ -44,7 +44,7 @@ export class Checkout extends Component {
 const mapDispatch = dispatch => ({
   sendCart: orderId => dispatch(sendCart(orderId)),
   fetchProduct: productId => dispatch(fetchProduct(productId)),
-  checkoutCart: () => dispatch(checkoutCart())
+  completeCart: () => dispatch(completeCart())
 })
 
 const mapState = state => ({
