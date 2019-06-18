@@ -57,9 +57,7 @@ export class SingleProduct extends Component {
               ))}
             </div>
             {this.props.isAdmin ? (
-              <Link to="/Update" component={UpdateProduct}>
-                Update
-              </Link>
+              <Link to="/Update">Update</Link>
             ) : (
               <Fragment />
             )}

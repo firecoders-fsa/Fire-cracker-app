@@ -16,6 +16,7 @@ import SearchResults from './components/SearchResults'
 import PreviousOrders from './components/PreviousOrders'
 import SinglePreviousOrder from './components/SinglePreviousOrder'
 
+import AllOrders from './components/Admin/AllOrders'
 import Checkout from './components/Checkout'
 /**
  * COMPONENT
@@ -41,6 +42,7 @@ class Routes extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/search" component={SearchResults} />
+        <Route path="/allorders" component={AllOrders} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}

@@ -28,8 +28,12 @@ export class Checkout extends Component {
             ))}
 
             <br />
+
             <Elements>
-              <CheckoutForm completeCart={this.props.completeCart} />
+              <CheckoutForm
+                completeCart={this.props.completeCart}
+                user={this.props.user}
+              />
             </Elements>
           </div>
         )
@@ -45,7 +49,7 @@ export class Checkout extends Component {
 const mapDispatch = dispatch => ({
   sendCart: orderId => dispatch(sendCart(orderId)),
   fetchProduct: productId => dispatch(fetchProduct(productId)),
-  completeCart: () => dispatch(completeCart())
+  completeCart: (email, address) => dispatch(completeCart(email, address))
 })
 
 const mapState = state => ({

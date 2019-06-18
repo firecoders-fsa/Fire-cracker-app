@@ -1,12 +1,13 @@
 const router = require('express').Router()
 
-const {Order, Product, ProductOrderStash, Image} = require('../db/models')
+const {Order, Product, ProductOrderStash, User, Image} = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
   try {
-    const allOrders = await Order.findAll({include: [{model: Product}]})
-
+    const allOrders = await Order.findAll({
+      include: [{model: Product, include: Image}, {model: User}]
+    })
     res.json(allOrders)
   } catch (err) {
     console.error(err)
@@ -44,6 +45,9 @@ router.post('/:orderId/:productId', async (req, res, next) => {
     const singleOrder = orderArr[0]
 
     const singleProduct = await Product.findByPk(req.params.productId)
+    singleProduct.update({
+      inventoryQuantity: singleProduct.inventoryQuantity - 1
+    })
     if (await singleOrder.hasProduct(singleProduct)) {
       let test = await ProductOrderStash.findAll({
         where: {
@@ -56,6 +60,16 @@ router.post('/:orderId/:productId', async (req, res, next) => {
       })
     }
     await singleOrder.addProduct(singleProduct)
+    let test = await ProductOrderStash.findAll({
+      where: {
+        productId: req.params.productId,
+        orderId: singleOrder.id
+      }
+    })
+
+    test[0].update({
+      priceAtPurchase: singleProduct.price
+    })
     res.json(await singleOrder.getProducts())
   } catch (err) {
     next(err)
@@ -109,6 +123,20 @@ router.put('/:orderId/:productId', async (req, res, next) => {
         quantity: Number(req.query.quantity)
       })
     }
+    await singleOrder.addProduct(singleProduct)
+    singleProduct.update({
+      inventoryQuantity:
+        singleProduct.inventoryQuantity - Number(req.query.quantity)
+    })
+    let test = await ProductOrderStash.findAll({
+      where: {
+        productId: req.params.productId,
+        orderId: singleOrder.id
+      }
+    })
+    test[0].update({
+      priceAtPurchase: singleProduct.price
+    })
     await singleOrder.addProduct(singleProduct)
     res.json(await singleOrder.getProducts())
   } catch (err) {

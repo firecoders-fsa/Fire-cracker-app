@@ -96,10 +96,12 @@ export const sendCart = () => async dispatch => {
   }
 }
 
-export const completeCart = () => async dispatch => {
+export const completeCart = (email, address) => async dispatch => {
+  console.log('inside of completeCart', email)
   try {
     const {data: checkedOutCart} = await axios.put('/api/cart/checkout', {
-      status: 'processing'
+      email,
+      address
     })
     dispatch(checkoutCart(checkedOutCart))
   } catch (err) {
