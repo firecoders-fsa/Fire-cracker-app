@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
 export function UpdateProduct(props) {
   const classes = useStyles()
   const singleProduct = props.singleProduct
-
   const [values, setValues] = useState({
     name: singleProduct.name,
     description: singleProduct.description,
@@ -113,6 +112,7 @@ export function UpdateProduct(props) {
           margin="normal"
           variant="outlined"
         />
+
         <Button
           variant="contained"
           color="primary"

@@ -1,67 +1,55 @@
 import React, {Component} from 'react'
-import {withRouter} from 'react-router-dom'
+import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {sendCart} from '../store/orders'
-import axios from 'axios'
+import {sendCart, completeCart} from '../store/orders'
+import {Elements} from 'react-stripe-elements'
+import CheckoutForm from './CheckoutForm'
+import {fetchProduct} from '../store/singleProduct'
 
 export class Checkout extends Component {
-  constructor() {
-    super()
-    this.state = {
-      hasNotUpdated: true
-    }
-    this.sendEmail = this.sendEmail.bind(this)
-  }
-  async componentDidUpdate() {
-    if (this.state.hasNotUpdated) {
-      this.setState({
-        hasNotUpdated: false
-      })
-      await this.props.sendCart(this.props.user.id)
-
-      console.log('hello ', this.props.singleOrder[0])
-    }
-  }
-  async sendEmail() {
-    await axios.post('/api/users/30/checkout/done')
-  }
   render() {
-    console.log('user props: ', this.props.user)
-
-    if (this.props.user.id) {
-      if (this.props.singleOrder[0]) {
+    try {
+      if (this.props.cart.products) {
         return (
           <div>
-            {this.props.user.shippingAddress
-              ? this.props.user.shippingAddress
-              : 'Example Shipping Address'}
-            <br />
-            <p>
-              Does this shipping address look correct? If so, click the button
-              below to finalize your order.
-            </p>
+            {this.props.cart.products.map(product => (
+              <div key={product.id}>
+                <Link
+                  to={`/products/${product.id}`}
+                  onClick={() => this.props.fetchProduct(product.id)}
+                >
+                  <h4>{product.name}</h4>
+                  <img src={product.images.map(img => img.imageURL)} />
+                </Link>
+                <h5>${product.price / 100}</h5>
+                <p>Quantity: {product.productOrderStash.quantity}</p>
+                <p>{product.description}</p>
+              </div>
+            ))}
 
             <br />
-            <button type="button" onClick={this.sendEmail}>
-              Click!
-            </button>
+            <Elements>
+              <CheckoutForm completeCart={this.props.completeCart} />
+            </Elements>
           </div>
         )
       } else {
         return <div>cart is empty</div>
       }
-    } else {
-      return <div>user is not defined</div>
+    } catch (err) {
+      return <div>{err}</div>
     }
   }
 }
 
 const mapDispatch = dispatch => ({
-  sendCart: id => dispatch(sendCart(id))
+  sendCart: orderId => dispatch(sendCart(orderId)),
+  fetchProduct: productId => dispatch(fetchProduct(productId)),
+  completeCart: () => dispatch(completeCart())
 })
 
 const mapState = state => ({
-  singleOrder: state.orders.singleOrder,
+  cart: state.orders.cart,
   user: state.user
 })
 
