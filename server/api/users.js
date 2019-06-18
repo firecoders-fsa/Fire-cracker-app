@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const {User, Order, Product, Image} = require('../db/models')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -58,5 +60,22 @@ router.post('/:userId/cart', async (req, res, next) => {
     res.json(newOrder)
   } catch (error) {
     next(error)
+  }
+})
+
+router.get('/:userId/previousOrders', async (req, res, next) => {
+  try {
+    const previousOrders = await Order.findAll({
+      where: {
+        userId: req.params.userId,
+        status: {
+          [Op.ne]: 'created'
+        }
+      },
+      include: [Product, {model: Product, include: Image}]
+    })
+    res.json(previousOrders)
+  } catch (err) {
+    next(err)
   }
 })

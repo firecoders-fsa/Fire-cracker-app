@@ -13,6 +13,9 @@ import Cart from './components/Cart'
 import NewProduct from './components/Admin/NewProduct'
 import UpdateProduct from './components/Admin/UpdateProduct'
 import SearchResults from './components/SearchResults'
+import PreviousOrders from './components/PreviousOrders'
+import SinglePreviousOrder from './components/SinglePreviousOrder'
+
 import AllOrders from './components/Admin/AllOrders'
 import Checkout from './components/Checkout'
 /**
@@ -44,6 +47,8 @@ class Routes extends Component {
           <Switch>
             {/* Routes placed here are only available after logging in */}
             <Route path="/home" component={UserHome} />
+            <Route exact path="/orderHistory" component={PreviousOrders} />
+            <Route path="/orderHistory/:id" component={SinglePreviousOrder} />
           </Switch>
         )}
         {/* Displays our Login component as a fallback */}
