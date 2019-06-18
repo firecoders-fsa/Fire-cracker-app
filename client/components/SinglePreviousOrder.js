@@ -28,13 +28,14 @@ export class SinglePreviousOrder extends Component {
               <h5>{product.name}</h5>
               <img src={product.images[0].imageURL} />
               <h6>Quantity: {product.productOrderStash.quantity}</h6>
-              <h6>${product.price / 100}</h6>
+              <h6>${product.productOrderStash.priceAtPurchase / 100}</h6>
             </Link>
           </div>
         ))}
         <h3>
           Cart Total: ${this.props.singlePreviousOrder.products.reduce(
-            (total, product) => total + product.price,
+            (total, product) =>
+              total + product.productOrderStash.priceAtPurchase,
             0
           ) / 100}
         </h3>
