@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {sendCart, removeProduct} from '../store/orders'
+import {sendCart, removeProduct, changeQuantity} from '../store/orders'
 import {fetchProduct} from '../store/singleProduct'
+import {ChangeQuantity} from './ChangeQuantity'
 
 export class Cart extends Component {
   constructor() {
@@ -20,36 +21,38 @@ export class Cart extends Component {
   }
 
   render() {
-    // console.log(this.props)
-    if (this.props.cart.products) {
-      if (this.props.cart.products.length > 0) {
-        return this.props.cart.products.map(product => (
-          <div key={product.id}>
-            <Link
-              to={`/products/${product.id}`}
-              onClick={() => this.props.fetchProduct(product.id)}
-            >
-              <h4>{product.name}</h4>
-              <img src={product.images.map(img => img.imageURL)} />
-            </Link>
-            <h5>${product.price / 100}</h5>
-            <p>Quantity: {product.productOrderStash.quantity}</p>
-            <p>{product.description}</p>
+    console.log('cart: ', this.props)
 
-            <button
-              type="button"
-              onClick={() => this.deleteProduct(this.props.cart.id, product.id)}
-            >
-              Remove from Cart
-            </button>
-          </div>
-        ))
-      } else {
-        return <div>cart is empty</div>
-      }
-    } else {
-      return <div>cart is empty</div>
-    }
+    return this.props.cart.products && this.props.cart.products[0] ? (
+      this.props.cart.products.map(product => (
+        <div key={product.id}>
+          <Link
+            to={`/products/${product.id}`}
+            onClick={() => this.props.fetchProduct(product.id)}
+          >
+            <h4>{product.name}</h4>
+            <img src={product.images.map(img => img.imageURL)} />
+          </Link>
+          <h5>${product.price / 100}</h5>
+
+          <ChangeQuantity
+            singleProduct={product}
+            cart={this.props.cart}
+            sendQuantity={this.props.sendQuantity}
+          />
+
+          <p>{product.description}</p>
+          <button
+            type="button"
+            onClick={() => this.deleteProduct(this.props.cart.id, product.id)}
+          >
+            Remove from Cart
+          </button>
+        </div>
+      ))
+    ) : (
+      <div>cart is empty</div>
+    )
   }
 }
 
@@ -57,7 +60,9 @@ const mapDispatch = dispatch => ({
   sendCart: () => dispatch(sendCart()),
   fetchProduct: productId => dispatch(fetchProduct(productId)),
   removeProduct: (orderId, productId) =>
-    dispatch(removeProduct(orderId, productId))
+    dispatch(removeProduct(orderId, productId)),
+  sendQuantity: (orderId, productId, quantity) =>
+    dispatch(changeQuantity(orderId, productId, quantity))
 })
 
 const mapState = state => ({
