@@ -28,9 +28,11 @@ console.log('* [example 1.1] sending test email')
 
 router.put('/checkout', async (req, res, next) => {
   try {
+    req.cart.update(req.body)
+    console.log('this is the request', req)
     send(
       {
-        to: req.user.email,
+        to: req.body.email || req.user.email,
         text:
           'Thanks for shopping with Firecoders! Your order id is ' + req.cart.id
       },
@@ -43,8 +45,6 @@ router.put('/checkout', async (req, res, next) => {
         )
       }
     )
-    req.cart.update(req.body)
-
     res.json(req.cart)
   } catch (err) {
     next(err)
@@ -66,7 +66,7 @@ router.post('/charge', async (req, res, next) => {
       description: 'An example charge',
       source: req.body
     })
-    send(req.user.email)
+
     res.json({status})
   } catch (err) {
     next(err)
