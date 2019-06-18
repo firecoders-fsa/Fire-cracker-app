@@ -36,8 +36,9 @@ export function SearchResults(props) {
     'This is productsArray.searchProducts',
     productsArray.searchProducts
   )
+  console.log('productsArray', productsArray)
   if (productsArray.searchProducts.length > 0) {
-    console.log('there are products!', productsArray.length)
+    console.log('there are products!', productsArray)
     return (
       <div>
         {productsArray.searchProducts.map(product => (

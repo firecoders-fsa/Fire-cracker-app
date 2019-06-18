@@ -81,7 +81,7 @@ export function SearchBar(props) {
   return (
     <form>
       <FormControl className={classes.margin}>
-        <InputLabel htmlFor="age-customized-native-simple">Age</InputLabel>
+        <InputLabel htmlFor="age-customized-native-simple" />
         <NativeSelect
           value={values.searchOption}
           onChange={handleChange('searchOption')}
