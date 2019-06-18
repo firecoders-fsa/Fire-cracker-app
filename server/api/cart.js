@@ -11,26 +11,24 @@ router.get('/', (req, res, next) => {
 })
 
 var send = require('gmail-send')({
-  //var send = require('../index.js')({
   user: 'graceshopperfirecoders@gmail.com',
-  // user: credentials.user,                  // Your GMail account used to send emails
+
   pass: process.env.EMAIL_PASS,
-  // pass: credentials.pass,                  // Application-specific password
-  to: 'maxgrosshandler@gmail.com',
-  subject: 'test subject',
-  text: 'gmail-send example 1' // Plain text
-  //html:    '<b>html text</b>'            // HTML
+
+  to: 'graceshopperfirecoders@gmail.com',
+  subject: 'Thank you for your order!',
+  text: 'Thanks for shopping with Firecoders! Your order id is fake!'
 })
-
-// Override any default option and send email
-
-console.log('* [example 1.1] sending test email')
 
 router.put('/checkout', async (req, res, next) => {
   try {
+    req.cart.update({status: 'processing'})
+    console.log('this is the request', req)
     send(
       {
-        // Overriding default parameters
+        to: req.body.email || req.user.email,
+        text:
+          'Thanks for shopping with Firecoders! Your order id is ' + req.cart.id
       },
       function(err, res) {
         console.log(
@@ -41,8 +39,6 @@ router.put('/checkout', async (req, res, next) => {
         )
       }
     )
-    req.cart.update(req.body)
-
     res.json(req.cart)
   } catch (err) {
     next(err)
@@ -64,7 +60,7 @@ router.post('/charge', async (req, res, next) => {
       description: 'An example charge',
       source: req.body
     })
-    send(req.user.email)
+
     res.json({status})
   } catch (err) {
     next(err)

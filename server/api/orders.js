@@ -54,6 +54,16 @@ router.post('/:orderId/:productId', async (req, res, next) => {
       })
     }
     await singleOrder.addProduct(singleProduct)
+    let test = await ProductOrderStash.findAll({
+      where: {
+        productId: req.params.productId,
+        orderId: singleOrder.id
+      }
+    })
+
+    test[0].update({
+      priceAtPurchase: singleProduct.price
+    })
     res.json(await singleOrder.getProducts())
   } catch (err) {
     next(err)
@@ -107,6 +117,16 @@ router.put('/:orderId/:productId', async (req, res, next) => {
         quantity: Number(req.query.quantity)
       })
     }
+    await singleOrder.addProduct(singleProduct)
+    let test = await ProductOrderStash.findAll({
+      where: {
+        productId: req.params.productId,
+        orderId: singleOrder.id
+      }
+    })
+    test[0].update({
+      priceAtPurchase: singleProduct.price
+    })
     await singleOrder.addProduct(singleProduct)
     res.json(await singleOrder.getProducts())
   } catch (err) {

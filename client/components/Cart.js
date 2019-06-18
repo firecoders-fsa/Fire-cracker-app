@@ -53,9 +53,7 @@ export class Cart extends Component {
           </div>
         ))}
         <div>
-          <Link to="/checkout" component={Checkout}>
-            Checkout
-          </Link>
+          <Link to="/checkout">Checkout</Link>
         </div>
       </div>
     ) : (
