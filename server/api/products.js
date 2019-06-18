@@ -1,5 +1,7 @@
 const router = require('express').Router()
-const {Product, Image, Review} = require('../db/models')
+const {Product, Image, Review, Category} = require('../db/models')
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
 
 module.exports = router
 
@@ -9,6 +11,25 @@ router.get('/', async (req, res, next) => {
     res.json(products)
   } catch (err) {
     next(err)
+  }
+})
+
+router.get('/search', async (req, res, next) => {
+  try {
+    const key = req.query.searchOption
+
+    const searchResults = await Product.findAll({
+      where: {
+        [key]: {
+          [Op.iLike]: '%' + req.query.q + '%'
+        }
+      },
+      include: [{model: Image}, {model: Review}, {model: Category}]
+    })
+
+    res.json(searchResults)
+  } catch (err) {
+    console.error(err)
   }
 })
 
