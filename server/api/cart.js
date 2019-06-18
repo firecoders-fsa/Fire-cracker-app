@@ -16,9 +16,9 @@ var send = require('gmail-send')({
   // user: credentials.user,                  // Your GMail account used to send emails
   pass: process.env.EMAIL_PASS,
   // pass: credentials.pass,                  // Application-specific password
-  to: 'maxgrosshandler@gmail.com',
-  subject: 'test subject',
-  text: 'gmail-send example 1' // Plain text
+  to: 'graceshopperfirecoders@gmail.com',
+  subject: 'Thank you for your order!',
+  text: 'Thanks for shopping with Firecoders! Your order id is fake!' // Plain text
   //html:    '<b>html text</b>'            // HTML
 })
 
@@ -30,7 +30,9 @@ router.put('/checkout', async (req, res, next) => {
   try {
     send(
       {
-        // Overriding default parameters
+        to: req.user.email,
+        text:
+          'Thanks for shopping with Firecoders! Your order id is ' + req.cart.id
       },
       function(err, res) {
         console.log(
