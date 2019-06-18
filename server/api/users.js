@@ -48,6 +48,7 @@ router.get('/:userId/cart', async (req, res, next) => {
 
 router.post('/:userId/cart', async (req, res, next) => {
   try {
+    // eslint-disable-next-line no-unused-vars
     const [newOrder, i] = await Order.findOrCreate({
       where: {
         userId: req.params.userId,
