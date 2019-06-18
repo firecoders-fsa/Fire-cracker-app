@@ -19,10 +19,18 @@ router.put('/checkout', async (req, res, next) => {
     next(err)
   }
 })
+
+function getTotal(req) {
+  let total = 0
+  for (let i = 0; i < req.cart.products.length; i++) {
+    total += Number(req.cart.products[i].price)
+  }
+  return total
+}
 router.post('/charge', async (req, res, next) => {
   try {
     let {status} = await stripe.charges.create({
-      amount: 2000,
+      amount: getTotal(req),
       currency: 'usd',
       description: 'An example charge',
       source: req.body
