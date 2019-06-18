@@ -47,7 +47,6 @@ export const fetchProducts = () => async dispatch => {
 
 export const createProduct = product => async dispatch => {
   try {
-    console.log(product)
     const {data: addedProduct} = await axios.post('/api/products', product)
     dispatch(newProduct(addedProduct))
   } catch (err) {
@@ -58,7 +57,7 @@ export const createProduct = product => async dispatch => {
 export const deleteProduct = id => async dispatch => {
   try {
     await axios.delete(`/api/products/${id}`)
-    dispatch(deleteProduct(id))
+    dispatch(removeProduct(id))
   } catch (err) {
     console.error(err)
   }

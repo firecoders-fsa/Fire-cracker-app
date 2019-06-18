@@ -10,8 +10,9 @@ import {fetchProducts} from './store/products'
 import AllProducts from './components/AllProducts'
 import SingleProduct from './components/SingleProduct'
 import Cart from './components/Cart'
-import NewProduct from './components/NewProduct'
-import UpdateProduct from './components/UpdateProduct'
+import NewProduct from './components/Admin/NewProduct'
+import UpdateProduct from './components/Admin/UpdateProduct'
+import SearchResults from './components/SearchResults'
 
 import Checkout from './components/Checkout'
 /**
@@ -37,6 +38,7 @@ class Routes extends Component {
         <Route path="/checkout" component={Checkout} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/search" component={SearchResults} />
         {isLoggedIn && (
           <Switch>
             {/* Routes placed here are only available after logging in */}

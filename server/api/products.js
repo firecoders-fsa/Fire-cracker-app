@@ -12,6 +12,25 @@ router.get('/', async (req, res, next) => {
   }
 })
 
+router.get('/search', async (req, res, next) => {
+  try {
+    const key = req.query.searchOption
+
+    const searchResults = await Product.findAll({
+      where: {
+        [key]: {
+          [Op.iLike]: '%' + req.query.q + '%'
+        }
+      },
+      include: [{model: Image}, {model: Review}, {model: Category}]
+    })
+
+    res.json(searchResults)
+  } catch (err) {
+    console.error(err)
+  }
+})
+
 router.get('/:id', async (req, res, next) => {
   try {
     const singleProduct = await Product.findByPk(req.params.id, {

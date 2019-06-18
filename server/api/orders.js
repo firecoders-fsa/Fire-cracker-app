@@ -3,8 +3,15 @@ const router = require('express').Router()
 const {Order, Product, ProductOrderStash} = require('../db/models')
 module.exports = router
 
-// getting all orders by a particular user
-// /users/:userId
+router.get('/', async (req, res, next) => {
+  try {
+    const allOrders = await Order.findAll({include: [{model: Product}]})
+
+    res.json(allOrders)
+  } catch (err) {
+    console.error(err)
+  }
+})
 
 //getting the products on a particular order
 // /orders/:orderId
