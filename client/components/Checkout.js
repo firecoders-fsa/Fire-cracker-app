@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {withRouter, Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {sendCart, completeCart} from '../store/orders'
-import Cart from './Cart'
+import {Elements} from 'react-stripe-elements'
+import CheckoutForm from './CheckoutForm'
 import {fetchProduct} from '../store/singleProduct'
 
 export class Checkout extends Component {
@@ -30,6 +31,9 @@ export class Checkout extends Component {
             <button type="button" onClick={() => this.props.completeCart()}>
               Checkout
             </button>
+            <Elements>
+              <CheckoutForm />
+            </Elements>
           </div>
         )
       } else {

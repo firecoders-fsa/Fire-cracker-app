@@ -1,6 +1,7 @@
 const path = require('path')
 const express = require('express')
 const morgan = require('morgan')
+
 const compression = require('compression')
 const session = require('express-session')
 const passport = require('passport')
@@ -49,6 +50,7 @@ const createApp = () => {
   // body parsing middleware
   app.use(express.json())
   app.use(express.urlencoded({extended: true}))
+  app.use(require('body-parser').text())
 
   // compression middleware
   app.use(compression())

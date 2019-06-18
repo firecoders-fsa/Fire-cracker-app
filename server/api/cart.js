@@ -1,6 +1,7 @@
 const router = require('express').Router()
 module.exports = router
 const {Order, User} = require('../db/models')
+const stripe = require('stripe')('sk_test_JZyKRRkdJ0YHWeFJx2GZzAuR')
 
 router.get('/', (req, res, next) => {
   try {
@@ -18,6 +19,19 @@ router.put('/checkout', async (req, res, next) => {
     next(err)
   }
 })
+router.post('/charge', async (req, res, next) => {
+  try {
+    let {status} = await stripe.charges.create({
+      amount: 2000,
+      currency: 'usd',
+      description: 'An example charge',
+      source: req.body
+    })
+    res.json({status})
+  } catch (err) {
+    next(err)
+  }
+})
 
 router.put('/checkout/done', async (req, res, next) => {
   try {
@@ -29,6 +43,7 @@ router.put('/checkout/done', async (req, res, next) => {
     next(err)
   }
 })
+
 function send(useremail) {
   require('gmail-send')({
     user: 'graceshopperfirecoders@gmail.com', // Your GMail account used to send emails
