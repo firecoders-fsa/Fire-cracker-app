@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {CardElement, injectStripe} from 'react-stripe-elements'
+import {EventEmitter} from 'events'
+import {PassThrough} from 'stream'
 
 class CheckoutForm extends Component {
   constructor(props) {
@@ -29,10 +31,15 @@ class CheckoutForm extends Component {
   }
   handleSubmit(event) {
     event.preventDefault()
-    this.setState({
-      email: event.target.email.value,
-      address: event.target.address.value
-    })
+    let snake = event.target.email.value
+    if (snake.includes('@') || snake.endsWith('.com')) {
+      this.setState({
+        email: event.target.email.value,
+        address: event.target.address.value
+      })
+    } else {
+      event.target.email.value = 'Invalid email!'
+    }
   }
   render() {
     if (this.state.complete) return <h1>Purchase Complete</h1>

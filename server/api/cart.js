@@ -11,20 +11,14 @@ router.get('/', (req, res, next) => {
 })
 
 var send = require('gmail-send')({
-  //var send = require('../index.js')({
   user: 'graceshopperfirecoders@gmail.com',
-  // user: credentials.user,                  // Your GMail account used to send emails
+
   pass: process.env.EMAIL_PASS,
-  // pass: credentials.pass,                  // Application-specific password
+
   to: 'graceshopperfirecoders@gmail.com',
   subject: 'Thank you for your order!',
-  text: 'Thanks for shopping with Firecoders! Your order id is fake!' // Plain text
-  //html:    '<b>html text</b>'            // HTML
+  text: 'Thanks for shopping with Firecoders! Your order id is fake!'
 })
-
-// Override any default option and send email
-
-console.log('* [example 1.1] sending test email')
 
 router.put('/checkout', async (req, res, next) => {
   try {
