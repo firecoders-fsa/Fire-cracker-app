@@ -42,6 +42,9 @@ router.post('/:orderId/:productId', async (req, res, next) => {
     const singleOrder = orderArr[0]
 
     const singleProduct = await Product.findByPk(req.params.productId)
+    singleProduct.update({
+      inventoryQuantity: singleProduct.inventoryQuantity - 1
+    })
     if (await singleOrder.hasProduct(singleProduct)) {
       let test = await ProductOrderStash.findAll({
         where: {
@@ -118,6 +121,10 @@ router.put('/:orderId/:productId', async (req, res, next) => {
       })
     }
     await singleOrder.addProduct(singleProduct)
+    singleProduct.update({
+      inventoryQuantity:
+        singleProduct.inventoryQuantity - Number(req.query.quantity)
+    })
     let test = await ProductOrderStash.findAll({
       where: {
         productId: req.params.productId,
