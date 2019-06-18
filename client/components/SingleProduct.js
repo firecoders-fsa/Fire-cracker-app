@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 import {fetchProduct} from '../store/singleProduct'
 import {addProduct, sendCart} from '../store/orders'
-import {UpdateProduct} from './Admin/UpdateProduct'
 
 export class SingleProduct extends Component {
   constructor() {
