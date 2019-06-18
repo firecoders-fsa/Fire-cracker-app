@@ -26,13 +26,10 @@ export class Checkout extends Component {
                 <p>{product.description}</p>
               </div>
             ))}
-            If your order looks right, click the button below!
+
             <br />
-            <button type="button" onClick={() => this.props.completeCart()}>
-              Checkout
-            </button>
             <Elements>
-              <CheckoutForm />
+              <CheckoutForm completeCart={this.props.completeCart} />
             </Elements>
           </div>
         )

@@ -1,6 +1,5 @@
 const router = require('express').Router()
 module.exports = router
-const {Order, User} = require('../db/models')
 const stripe = require('stripe')('sk_test_JZyKRRkdJ0YHWeFJx2GZzAuR')
 
 router.get('/', (req, res, next) => {
@@ -11,9 +10,39 @@ router.get('/', (req, res, next) => {
   }
 })
 
+var send = require('gmail-send')({
+  //var send = require('../index.js')({
+  user: 'graceshopperfirecoders@gmail.com',
+  // user: credentials.user,                  // Your GMail account used to send emails
+  pass: process.env.EMAIL_PASS,
+  // pass: credentials.pass,                  // Application-specific password
+  to: 'maxgrosshandler@gmail.com',
+  subject: 'test subject',
+  text: 'gmail-send example 1' // Plain text
+  //html:    '<b>html text</b>'            // HTML
+})
+
+// Override any default option and send email
+
+console.log('* [example 1.1] sending test email')
+
 router.put('/checkout', async (req, res, next) => {
   try {
+    send(
+      {
+        // Overriding default parameters
+      },
+      function(err, res) {
+        console.log(
+          '* [example 1.1] send() callback returned: err:',
+          err,
+          '; res:',
+          res
+        )
+      }
+    )
     req.cart.update(req.body)
+
     res.json(req.cart)
   } catch (err) {
     next(err)
@@ -35,30 +64,9 @@ router.post('/charge', async (req, res, next) => {
       description: 'An example charge',
       source: req.body
     })
+    send(req.user.email)
     res.json({status})
   } catch (err) {
     next(err)
   }
 })
-
-router.put('/checkout/done', async (req, res, next) => {
-  try {
-    req.cart.update({
-      status: 'completed'
-    })
-    res.json('this thing shipped')
-  } catch (err) {
-    next(err)
-  }
-})
-
-function send(useremail) {
-  require('gmail-send')({
-    user: 'graceshopperfirecoders@gmail.com', // Your GMail account used to send emails
-    pass: process.env.EMAIL_PASS, // Application-specific password
-    to: useremail || 'graceshopperfirecoders@gmail.com', // Send to yourself
-    subject: 'Your order was completed!',
-    text:
-      'Thanks for shopping with Firecoders Incorporated! We hope you have an explosively fun time with your products!' // Plain text
-  })({}) // Send email without any check
-}
