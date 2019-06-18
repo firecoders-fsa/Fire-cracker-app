@@ -5,6 +5,39 @@ export const ADD_PROD_TO_ORDER = 'ADD_PROD_TO_ORDER'
 export const DELETE_PROD_FROM_CART = 'DELETE_PROD_FROM_CART'
 export const CHANGE_PURCHASE_QUANTITY = 'CHANGE_PURCHASE_QUANTITY'
 export const CHECKOUT_CART = 'CHECKOUT_CART'
+export const GET_PREVIOUS_ORDERS = 'GET_PREVIOUS_ORDERS'
+
+export const GET_SINGLE_ORDER = 'GET_SINGLE_ORDER'
+
+export const getSinglePreviousOrder = singlePreviousOrder => ({
+  type: GET_SINGLE_ORDER,
+  singlePreviousOrder
+})
+
+export const getSingleOrder = orderId => async dispatch => {
+  try {
+    const {data: singleOrder} = await axios.get(`/api/orders/${orderId}`)
+    dispatch(getSinglePreviousOrder(singleOrder))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const getAllPreviousOrders = previousOrders => ({
+  type: GET_PREVIOUS_ORDERS,
+  previousOrders
+})
+
+export const getPreviousOrders = userId => async dispatch => {
+  try {
+    const {data: allOrders} = await axios.get(
+      `/api/users/${userId}/previousOrders`
+    )
+    dispatch(getAllPreviousOrders(allOrders))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 export const changePurchaseQuantity = (productId, quantity) => ({
   type: CHANGE_PURCHASE_QUANTITY,
@@ -85,7 +118,9 @@ export const addProduct = (orderId, productId) => async dispatch => {
 }
 
 const initialState = {
-  cart: {}
+  cart: {},
+  previousOrders: [],
+  singlePreviousOrder: {}
 }
 
 const reducer = (state = initialState, action) => {
@@ -127,6 +162,16 @@ const reducer = (state = initialState, action) => {
             return product
           })
         }
+      }
+    case GET_PREVIOUS_ORDERS:
+      return {
+        ...state,
+        previousOrders: action.previousOrders
+      }
+    case GET_SINGLE_ORDER:
+      return {
+        ...state,
+        singlePreviousOrder: action.singlePreviousOrder
       }
     default:
       return state

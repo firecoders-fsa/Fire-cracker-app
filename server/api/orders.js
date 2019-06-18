@@ -1,6 +1,6 @@
 const router = require('express').Router()
 
-const {Order, Product, ProductOrderStash} = require('../db/models')
+const {Order, Product, ProductOrderStash, Image} = require('../db/models')
 module.exports = router
 
 router.get('/', async (req, res, next) => {
@@ -17,11 +17,14 @@ router.get('/', async (req, res, next) => {
 // /orders/:orderId
 router.get('/:orderId', async (req, res, next) => {
   try {
-    const singleOrder = await Order.findByPk(req.params.orderId)
+    const singleOrder = await Order.findOne({
+      where: {
+        id: req.params.orderId
+      },
+      include: [Product, {model: Product, include: Image}]
+    })
 
-    let orderProducts = await singleOrder.getProducts()
-
-    res.json(orderProducts)
+    res.json(singleOrder)
   } catch (err) {
     next(err)
   }
