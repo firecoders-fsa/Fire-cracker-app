@@ -1,67 +1,55 @@
-// import React from 'react'
-// import {withRouter, Link} from 'react-router-dom'
-// import {connect} from 'react-redux'
-// import {fetchOrders} from ''
-// import { makeStyles } from '@material-ui/core/styles';
-// import Table from '@material-ui/core/Table';
-// import TableBody from '@material-ui/core/TableBody';
-// import TableCell from '@material-ui/core/TableCell';
-// import TableHead from '@material-ui/core/TableHead';
-// import TableRow from '@material-ui/core/TableRow';
-// import Paper from '@material-ui/core/Paper';
+import React, {Component} from 'react'
+import {withRouter} from 'react-router-dom'
+import {connect} from 'react-redux'
+import {fetchOrders} from '../../store/adminOrders'
+import Moment from 'react-moment'
 
-// const useStyles = makeStyles(theme => ({
-//   root: {
-//     width: '100%',
-//   },
-//   paper: {
-//     marginTop: theme.spacing(3),
-//     width: '100%',
-//     overflowX: 'auto',
-//     marginBottom: theme.spacing(2),
-//   },
-//   table: {
-//     minWidth: 650,
-//   },
-// }));
+export class AllOrders extends Component {
+  componentDidMount() {
+    console.log('componentdidmount')
+    this.props.getOrders()
+  }
 
-// function createData(status, calories, fat, carbs, protein) {
-//   return { name, calories, fat, carbs, protein };
-// }
+  render() {
+    const allOrders = this.props.allOrders
+    console.log('allOrders: ', this.props)
 
-// const rows = allOrders.map(createData(''))
+    return (
+      <div>
+        {allOrders.map(order => (
+          <div key={order.id}>
+            <div>
+              <div className="card-top">
+                <h5>{order.id}</h5>
+                <Moment format="MM/DD/YYYY HH:mm">{order.createdAt}</Moment>
+              </div>
+              {order.products.map(product => {
+                return (
+                  <div key={product.id} className="product-Row">
+                    {product.images.length ? (
+                      <img src={product.images[0].imageURL} />
+                    ) : (
+                      <p>No Images</p>
+                    )}
+                    <p>{product.purchasedQuantity}</p>
+                    <p>${product.price / 100}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+}
 
-// [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Eclair', 262, 16.0, 24, 6.0),
-//   createData('Cupcake', 305, 3.7, 67, 4.3),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-// ];
+const mapState = state => ({
+  allOrders: state.adminOrders.allOrders
+})
 
-// export function AllOrders(props) {
-//   const classes = useStyles();
-//   const allOrders = props.allOrders
-//   return (
-//     <div>
-//       {allOrders.map(order => (
-//         <div key={order.id}>
-//             <h4>{product.name}</h4>
-//             <img src={product.images.map(img => img.imageURL)} />
-//             <h5>${product.price / 100}</h5>
-//           </Link>
-//         </div>
-//       ))}
-//     </div>
-//   )
-// }
+const mapDispatch = dispatch => ({
+  getOrders: () => dispatch(fetchOrders())
+})
 
-// const mapState = state => ({
-//   allOrders: state.AllOrders
-// })
-
-// const mapDispatch = dispatch => ({
-//   getOrders: () => dispatch(fetchOrders())
-// })
-
-// export default withRouter(connect(mapState, mapDispatch)(AllOrders))
+export default withRouter(connect(mapState, mapDispatch)(AllOrders))
