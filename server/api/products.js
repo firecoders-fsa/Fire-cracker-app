@@ -1,7 +1,5 @@
 const router = require('express').Router()
 const {Product, Image, Review, Category} = require('../db/models')
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op
 
 module.exports = router
 
@@ -36,7 +34,7 @@ router.get('/search', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const singleProduct = await Product.findByPk(req.params.id, {
-      include: [{model: Image}, {model: Review}]
+      include: [{model: Image}, {model: Review}, {model: Category}]
     })
     res.json(singleProduct)
   } catch (err) {
@@ -76,9 +74,10 @@ router.put('/:id', async (req, res, next) => {
       inventoryQuantity: req.body.inventoryQuantity,
       purchasedQuantity: req.body.purchasedQuantity
     })
+    // updatedProduct.setCategories(req.body.categories)
     res.json(updatedProduct)
   } catch (err) {
-    console.error(error)
+    console.error(err)
     next(err)
   }
 })
