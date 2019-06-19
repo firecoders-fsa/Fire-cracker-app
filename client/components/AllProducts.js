@@ -15,7 +15,11 @@ export class AllProducts extends Component {
               onClick={() => this.props.fetchProduct(product.id)}
             >
               <h4>{product.name}</h4>
-              <img src={product.images.map(img => img.imageURL)} />
+              <div>
+                {product.images.length && (
+                  <img src={product.images[0].imageURL} />
+                )}
+              </div>
               <h5>${product.price / 100}</h5>
             </Link>
           </div>

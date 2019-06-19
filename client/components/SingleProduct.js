@@ -28,7 +28,12 @@ export class SingleProduct extends Component {
         <div>
           <div key={singleProduct.id}>
             <h4>{singleProduct.name}</h4>
-            <img src={singleProduct.images.map(img => img.imageURL)} />
+            <div>
+              {singleProduct.images.map(img => (
+                <img src={img.imageURL} key={img.id} />
+              ))}
+            </div>
+
             <h5>Price: ${singleProduct.price / 100}</h5>
             <button
               type="button"
