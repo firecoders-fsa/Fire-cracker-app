@@ -35,10 +35,20 @@ async function seed() {
     'nipsy daisers',
     "one single whistlin' kitty chaser"
   ]
+
+  const fireworkImageUrls = [
+    '/images/fountain.png',
+    '/images/flowerPot.png',
+    '/images/groundspinner.png',
+    '/images/groundSpinner.jpg',
+    '/images/rocketshell.png',
+    '/images/rocket.jpg',
+    '/images/cherryBomb.png'
+  ]
   for (let i = 0; i < fireWorkNames.length; i++) {
     //product
     let randomName = fireWorkNames[i]
-    let description = faker.commerce.product()
+    let description = faker.lorem.sentences()
     let price = faker.random.number()
     let inventoryQuantity = faker.random.number()
     let manufacturer = faker.commerce.productAdjective()
@@ -51,9 +61,42 @@ async function seed() {
       manufacturer
     })
 
-    let image = await Image.create({
-      imageUrl: '/images/defaultImg.jpg'
-    })
+    if (i === 0) {
+      let fireImage = await Image.create({
+        imageURL: '/images/fountain.png'
+      })
+      await fakeProd.addImage(fireImage)
+      // let fireImage2 = await Image.create({
+      //   imageURL: '/images/flowerPot.png'
+      // })
+      // await fakeProd.addImage(fireImage2)
+    } else if (i === 1) {
+      let fireImage = await Image.create({
+        imageURL: fireworkImageUrls[2]
+      })
+      await fakeProd.addImage(fireImage)
+      // let fireImage2 = await Image.create({
+      //   imageURL: fireworkImageUrls[3]
+      // })
+      // await fakeProd.addImage(fireImage2)
+    } else if (i === 2) {
+      let fireImage = await Image.create({
+        imageURL: fireworkImageUrls[4]
+      })
+      await fakeProd.addImage(fireImage)
+      // let fireImage2 = await Image.create({
+      //   imageURL: fireworkImageUrls[5]
+      // })
+      // await fakeProd.addImage(fireImage2)
+    } else if (i === 16) {
+      let fireImage = await Image.create({
+        imageURL: fireworkImageUrls[6]
+      })
+      await fakeProd.addImage(fireImage)
+    } else {
+      let fakeImage = await Image.create()
+      await fakeProd.addImage(fakeImage)
+    }
 
     let adjective = faker.hacker.adjective()
     let fakeCat = await Category.create({
@@ -69,10 +112,8 @@ async function seed() {
     })
 
     await fakeProd.addReview(fakeRev)
-    let fakeImage = await Image.create()
 
     await fakeProd.addCategory(fakeCat)
-    await fakeProd.addImage(fakeImage)
     let order = ['created', 'processing', 'cancelled', 'completed', 'shipped']
 
     let num = Math.floor(Math.random() * 5)

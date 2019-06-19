@@ -28,12 +28,13 @@ export class PreviousOrders extends Component {
               <div key={product.id}>
                 <h5>{product.name}</h5>
                 <img src={product.images[0].imageURL} />
-                <h6>${product.price / 100}</h6>
+                <h6>${product.productOrderStash.priceAtPurchase / 100}</h6>
               </div>
             ))}
             <div>
               Cart Total: ${order.products.reduce(
-                (total, product) => total + product.price,
+                (total, product) =>
+                  total + product.productOrderStash.priceAtPurchase,
                 0
               ) / 100}
             </div>
