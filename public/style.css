@@ -26,3 +26,8 @@ code {
   padding: 20px;
   font-family: 'helvetica';
 }
+
+img {
+  width: 20rem;
+  height: auto;
+}

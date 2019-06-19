@@ -6,7 +6,7 @@ import {fetchProduct} from '../store/singleProduct'
 export class AllProducts extends Component {
   render() {
     const productsArray = this.props.products
-    return (
+    return this.props.products ? (
       <div>
         {productsArray.map(product => (
           <div key={product.id}>
@@ -21,6 +21,8 @@ export class AllProducts extends Component {
           </div>
         ))}
       </div>
+    ) : (
+      <div>Error Loading</div>
     )
   }
 }
