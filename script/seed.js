@@ -65,29 +65,26 @@ async function seed() {
       let fireImage = await Image.create({
         imageURL: '/images/fountain.png'
       })
-      await fakeProd.addImage(fireImage)
-      // let fireImage2 = await Image.create({
-      //   imageURL: '/images/flowerPot.png'
-      // })
-      // await fakeProd.addImage(fireImage2)
+      let fireImage2 = await Image.create({
+        imageURL: '/images/flowerPot.png'
+      })
+      await fakeProd.addImages([fireImage, fireImage2])
     } else if (i === 1) {
       let fireImage = await Image.create({
         imageURL: fireworkImageUrls[2]
       })
-      await fakeProd.addImage(fireImage)
-      // let fireImage2 = await Image.create({
-      //   imageURL: fireworkImageUrls[3]
-      // })
-      // await fakeProd.addImage(fireImage2)
+      let fireImage2 = await Image.create({
+        imageURL: fireworkImageUrls[3]
+      })
+      await fakeProd.addImages([fireImage, fireImage2])
     } else if (i === 2) {
       let fireImage = await Image.create({
         imageURL: fireworkImageUrls[4]
       })
-      await fakeProd.addImage(fireImage)
-      // let fireImage2 = await Image.create({
-      //   imageURL: fireworkImageUrls[5]
-      // })
-      // await fakeProd.addImage(fireImage2)
+      let fireImage2 = await Image.create({
+        imageURL: fireworkImageUrls[5]
+      })
+      await fakeProd.addImages([fireImage, fireImage2])
     } else if (i === 16) {
       let fireImage = await Image.create({
         imageURL: fireworkImageUrls[6]
